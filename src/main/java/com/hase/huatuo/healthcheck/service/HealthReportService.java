@@ -35,15 +35,15 @@ public class HealthReportService {
             AreaReport areaReportResponse = new AreaReport();
             areaReportResponse.setArea("GZ");
             List<BuildingReport> buildingReportResponses = new ArrayList<>();
-            buildingReportResponses.add(generateBuildingReport("tko","10", "20", "30"));
-            buildingReportResponses.add(generateBuildingReport("tko1","11", "21", "32"));
+            buildingReportResponses.add(generateBuildingReport("1","10", "20", "30"));
+            buildingReportResponses.add(generateBuildingReport("2","11", "21", "32"));
             areaReportResponse.setBuildingReports(buildingReportResponses);
             areaReportResponses.add(areaReportResponse);
             AreaReport areaReportResponseXA = new AreaReport();
             areaReportResponseXA.setArea("XA");
             List<BuildingReport> buildingReportResponsesXA = new ArrayList<>();
-            buildingReportResponsesXA.add(generateBuildingReport("F3","10", "20", "30"));
-            buildingReportResponsesXA.add(generateBuildingReport("F4","11", "21", "32"));
+            buildingReportResponsesXA.add(generateBuildingReport("1","10", "20", "30"));
+            buildingReportResponsesXA.add(generateBuildingReport("2","11", "21", "32"));
             areaReportResponseXA.setBuildingReports(buildingReportResponsesXA);
             areaReportResponses.add(areaReportResponseXA);
 
@@ -84,6 +84,15 @@ public class HealthReportService {
             });
             buildingReports.add(br);
         }
+        buildingReports.sort(((o1, o2) -> {
+            if(Integer.parseInt(o1.getBuildingName()) > Integer.parseInt(o2.getBuildingName())){
+                return 1;
+            } else if(Integer.parseInt(o1.getBuildingName()) < Integer.parseInt(o2.getBuildingName())){
+                return -1;
+            } else {
+                return 0;
+            }
+        }));
         return buildingReports;
     }
 
