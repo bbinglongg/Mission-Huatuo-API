@@ -66,7 +66,7 @@ public class HuatuoResource {
     
     @GetMapping("/datadict")
     @ApiOperation(value = "datadict", notes = "Get Datadict From API", httpMethod = "GET")
-    public ResponseEntity<DatadictGetResponse> getDatadict(@RequestBody final DatadictGetRequest datadictGetReqeust) throws ParseException {
+    public ResponseEntity<DatadictGetResponse> getDatadict() throws ParseException {
 		return ResponseEntity.ok(new DatadictGetResponse());
     }
 }
