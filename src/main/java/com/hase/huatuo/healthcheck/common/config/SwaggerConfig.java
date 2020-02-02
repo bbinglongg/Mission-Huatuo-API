@@ -24,9 +24,9 @@ public class SwaggerConfig {
                         .title("Huatuo API")
                         .description("Huatuo API list")
                         .version("9.0")
-                        .contact(new Contact("David Gao","","695870700@qq.com"))
+                        .contact(new Contact("HASE RBWM","",""))
                         .license("The Apache License")
-                        .licenseUrl("http://huatuo.app77.cn")
+                        .licenseUrl("")
                         .build());
     }
 }
