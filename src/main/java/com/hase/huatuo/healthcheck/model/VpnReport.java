@@ -1,16 +1,16 @@
 package com.hase.huatuo.healthcheck.model;
 
-public class VPNReport {
+public class VpnReport {
 
-    public VPNReport () {}
+    public VpnReport() {}
 
-    public VPNReport (String vpnType, Integer count) {
+    public VpnReport(String vpnType, long count) {
         this.vpnType = vpnType;
         this.count = count;
     }
 
     private String vpnType;
-    private Integer count;
+    private long count;
 
     public String getVpnType() {
         return vpnType;
@@ -20,11 +20,11 @@ public class VPNReport {
         this.vpnType = vpnType;
     }
 
-    public Integer getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(long count) {
         this.count = count;
     }
 }
