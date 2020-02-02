@@ -27,10 +27,11 @@ public class HealthReportService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public static final String HEALTH_STATISTIC_SQL = "SELECT  city, workplace,health_status, SUM(1) AS total FROM health_info h WHERE h.health_status IN('1', '2', '4') group BY h.city, h.workplace,h.health_status";
+    public static final String HEALTH_STATISTIC_SQL = "SELECT  l.city, l.workplace,h.health_status, SUM(1) AS total FROM location l LEFT JOIN health_info h on l.city = h.city and l.workplace = h.workplace group BY l.city, l.workplace,h.health_status";
 
     public ResponseEntity<List<AreaReport>> enquiry(final String isDummy){
         List<AreaReport> areaReportResponses = new ArrayList<>();
+
         if(IS_DUMMY.equalsIgnoreCase(isDummy)){
             AreaReport areaReportResponse = new AreaReport();
             areaReportResponse.setArea("GZ");
@@ -58,6 +59,7 @@ public class HealthReportService {
                 areaReport.setBuildingReports(transformHealthListToBuildingList(entry.getValue()));
                 areaReportResponses.add(areaReport);
             }
+
         }
         return ResponseEntity.ok(areaReportResponses);
     }
