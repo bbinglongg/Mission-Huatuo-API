@@ -1,6 +1,6 @@
 package com.hase.huatuo.healthcheck.model.request;
 
-public class VPNReportRequest {
+public class VpnReportRequest {
     private Integer day;
 
     public Integer getDay() {

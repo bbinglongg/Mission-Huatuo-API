@@ -1,10 +1,10 @@
 package com.hase.huatuo.healthcheck.rest;
 
 import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
-import com.hase.huatuo.healthcheck.model.request.VPNReportRequest;
-import com.hase.huatuo.healthcheck.model.request.VPNStatePostBody;
+import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
+import com.hase.huatuo.healthcheck.model.request.VpnRequest;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
-import com.hase.huatuo.healthcheck.model.response.VPNReportResponse;
+import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
 import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
 import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +41,14 @@ public class HuatuoResource {
     	return healthReportService.enquiry(isDummy);
     }
     
-    @PostMapping("/vpn-state")
-    public ResponseEntity submitVPNState(@RequestBody final VPNStatePostBody vpnStatePostBody) {
-        huatuoVPNService.submitVPNState(vpnStatePostBody);
+    @PostMapping("/vpn")
+    public ResponseEntity submitVPNState(@RequestBody final VpnRequest vpnRequest) {
+        huatuoVPNService.submitVPNState(vpnRequest);
     	return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/vpn-state/report")
-    public ResponseEntity<VPNReportResponse> loadVPNStateDashboard(@RequestBody final VPNReportRequest vpnReportRequest) throws ParseException {
-        return ResponseEntity.ok(new VPNReportResponse(huatuoVPNService.loadVPNStateDashboard(vpnReportRequest)));
+    @PostMapping("/vpn/report")
+    public ResponseEntity<VpnReportResponse> loadVPNStateDashboard(@RequestBody final VpnReportRequest vpnReportRequest) throws ParseException {
+        return ResponseEntity.ok(new VpnReportResponse(huatuoVPNService.loadVPNStateDashboard(vpnReportRequest)));
     }
 }

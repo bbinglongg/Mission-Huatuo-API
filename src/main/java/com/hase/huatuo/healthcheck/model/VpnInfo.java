@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
-@Entity(name = "vpn_info")
-public class VPNStateInfo {
+@Entity()
+public class VpnInfo {
     @Column(name = "open_id")
     private String openId;
     @Id

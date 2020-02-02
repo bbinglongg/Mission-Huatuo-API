@@ -1,14 +1,13 @@
 package com.hase.huatuo.healthcheck.service;
 
 import com.hase.huatuo.healthcheck.dao.VPNInfoRepository;
-import com.hase.huatuo.healthcheck.model.VPNReport;
-import com.hase.huatuo.healthcheck.model.request.VPNReportRequest;
-import com.hase.huatuo.healthcheck.model.response.VPNReportResponse;
+import com.hase.huatuo.healthcheck.model.VpnReport;
+import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hase.huatuo.healthcheck.model.VPNStateInfo;
-import com.hase.huatuo.healthcheck.model.request.VPNStatePostBody;
+import com.hase.huatuo.healthcheck.model.VpnInfo;
+import com.hase.huatuo.healthcheck.model.request.VpnRequest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,12 +21,12 @@ public class HuatuoVPNService {
 	@Autowired
 	private VPNInfoRepository vpnInfoRepository;
 
-	public void submitVPNState(VPNStatePostBody vpnStatePostBody) {
-		VPNStateInfo vpnStateInfo = vpnStatePostBody.getVpnStateInfo();
-		vpnInfoRepository.saveAndFlush(vpnStateInfo);
+	public void submitVPNState(VpnRequest vpnRequest) {
+		VpnInfo vpnInfo = vpnRequest.getVpnInfo();
+		vpnInfoRepository.saveAndFlush(vpnInfo);
 	}
 
-	public List<VPNReport> loadVPNStateDashboard(VPNReportRequest vpnReportRequest) throws ParseException {
+	public List<VpnReport> loadVPNStateDashboard(VpnReportRequest vpnReportRequest) throws ParseException {
 		Integer day = vpnReportRequest.getDay();
 		Date from;
 		if (day != null && day > 0) {
