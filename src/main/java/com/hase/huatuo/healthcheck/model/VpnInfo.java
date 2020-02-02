@@ -3,21 +3,25 @@ package com.hase.huatuo.healthcheck.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity()
+@IdClass(VpnInfo.VpnInfoKey.class)
 @ApiModel(description = "DO of VPN state info")
 public class VpnInfo {
-    @Column(name = "open_id")
-    @ApiModelProperty(value = "0", notes = "Open id", dataType = "java.lang.String")
-    private String openId;
     @Id
     @Column(name = "staff_id", nullable = false)
     @ApiModelProperty(value = "45022339", notes = "staff id of VPN state", dataType = "java.lang.String")
     private String staffId;
+    @Id
+    @Column(name = "vpn_type", nullable = false)
+    @ApiModelProperty(value = "0", notes = "VPN type", dataType = "java.lang.String")
+    private String vpnType;
+    @Column(name = "open_id")
+    @ApiModelProperty(value = "0", notes = "Open id", dataType = "java.lang.String")
+    private String openId;
     @Column(name = "location")
     @ApiModelProperty(value = "0", notes = "location", dataType = "java.lang.String")
     private String location;
@@ -30,9 +34,6 @@ public class VpnInfo {
     @Column(name = "band_width")
     @ApiModelProperty(value = "0", notes = "Open id", dataType = "java.lang.String")
     private String bandWidth;
-    @Column(name = "vpn_type")
-    @ApiModelProperty(value = "0", notes = "Open id", dataType = "java.lang.String")
-    private String vpnType;
     @Column(name = "had_reboot_adsl")
     @ApiModelProperty(value = "0", notes = "Open id", dataType = "java.lang.String")
     private String hadRebootADSL;
@@ -72,20 +73,28 @@ public class VpnInfo {
     @Column(name = "last_update_datetime")
     private Date lastUpdateDatetime;
 
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
     public String getStaffId() {
         return staffId;
     }
 
     public void setStaffId(String staffId) {
         this.staffId = staffId;
+    }
+
+    public String getVpnType() {
+        return vpnType;
+    }
+
+    public void setVpnType(String vpnType) {
+        this.vpnType = vpnType;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     public String getLocation() {
@@ -118,14 +127,6 @@ public class VpnInfo {
 
     public void setBandWidth(String bandWidth) {
         this.bandWidth = bandWidth;
-    }
-
-    public String getVpnType() {
-        return vpnType;
-    }
-
-    public void setVpnType(String vpnType) {
-        this.vpnType = vpnType;
     }
 
     public String getHadRebootADSL() {
@@ -230,5 +231,28 @@ public class VpnInfo {
 
     public void setLastUpdateDatetime(Date lastUpdateDatetime) {
         this.lastUpdateDatetime = lastUpdateDatetime;
+    }
+
+    public static class VpnInfoKey implements Serializable {
+
+        private String staffId;
+
+        private String vpnType;
+
+        public String getStaffId() {
+            return staffId;
+        }
+
+        public void setStaffId(String staffId) {
+            this.staffId = staffId;
+        }
+
+        public String getVpnType() {
+            return vpnType;
+        }
+
+        public void setVpnType(String vpnType) {
+            this.vpnType = vpnType;
+        }
     }
 }
