@@ -2,16 +2,16 @@ package com.hase.huatuo.healthcheck.model.response;
 
 import java.util.List;
 
-import com.hase.huatuo.healthcheck.model.PersonHealthInfo;
+import com.hase.huatuo.healthcheck.model.HealthInfo;
 
 public class HealthRequestResponse {
-	private List<PersonHealthInfo> personHealthInfos;
+	private List<HealthInfo> personHealthInfos;
 
-	public List<PersonHealthInfo> getPersonHealthInfos() {
+	public List<HealthInfo> getPersonHealthInfos() {
 		return personHealthInfos;
 	}
 
-	public void setPersonHealthInfos(List<PersonHealthInfo> personHealthInfos) {
+	public void setPersonHealthInfos(List<HealthInfo> personHealthInfos) {
 		this.personHealthInfos = personHealthInfos;
 	}
 	
