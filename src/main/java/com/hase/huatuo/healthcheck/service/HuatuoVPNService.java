@@ -23,6 +23,7 @@ public class HuatuoVPNService {
 
 	public void submitVPNState(VpnRequest vpnRequest) {
 		VpnInfo vpnInfo = vpnRequest.getVpnInfo();
+		vpnInfo.setLastUpdateDatetime(new Date());
 		vpnInfoRepository.saveAndFlush(vpnInfo);
 	}
 
