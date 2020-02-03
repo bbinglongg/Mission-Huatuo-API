@@ -2,7 +2,7 @@ package com.hase.huatuo.healthcheck.service;
 
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +39,13 @@ public class HuatuoRegistrationService {
             response.setMsg("please input valid staff ID");
             return ResponseEntity.ok(response);
         }
-        //check appId and staffID only exist one
-//        Example<UserInfo> example = Example.of(userInfo);
-//        Optional<UserInfo> savedUserInfos = userInfoRepository.findAll();
+        List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
+        if(registerRecords.size() != 0){
+            System.out.println("输入的staff ID 已注册");
+            response.setCode("-2");
+            response.setMsg("输入的staff ID 已注册");
+            return ResponseEntity.ok(response);
+        }
         SMSInfo smsInfo = smsInfoRepository.getOne(registrationPostBody.getMobileNum());
         if(registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) &&
                 (new Date().getTime() - smsInfo.getCreatetime() < 90 * 1000)){
@@ -118,6 +122,10 @@ public class HuatuoRegistrationService {
         if(mobileNum == null){
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "mobileNum is null", null);
         }
+        
+        if(!ifStaffInWhiteList(registrationPostBody.getStaffId())){
+        	ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "the staff ID cannot register", null);
+        }
     }
 
     private boolean checkBeforeSendSMS(String mobileNumber){
@@ -138,14 +146,16 @@ public class HuatuoRegistrationService {
         return false;
     }
     
-    private boolean ifStaffInWhiteList(String staffId) {
+    public boolean ifStaffInWhiteList(String staffId) {
     	try {
     		StaffList staffList = staffListRepository.findById(staffId).orElse(null);
+    		if(staffList != null) {
+    			return true;
+    		}
     	} catch(Exception e) {
-    		
+
     	}
-    	
-    	
-    	return true;
+
+    	return false;
     }
 }
