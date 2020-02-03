@@ -1,20 +1,24 @@
 package com.hase.huatuo.healthcheck.service;
 
-import com.hase.huatuo.healthcheck.dao.SMSInfoRepository;
-import com.hase.huatuo.healthcheck.dao.UserInfoRepository;
-import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
-import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.UserInfo;
-import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
-import com.hase.huatuo.healthcheck.model.response.CommonResponse;
-import com.hase.huatuo.healthcheck.utils.SMSUtils;
+import java.security.SecureRandom;
+import java.util.Date;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.regex.Pattern;
+import com.hase.huatuo.healthcheck.dao.SMSInfoRepository;
+import com.hase.huatuo.healthcheck.dao.StaffListRepository;
+import com.hase.huatuo.healthcheck.dao.UserInfoRepository;
+import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
+import com.hase.huatuo.healthcheck.model.SMSInfo;
+import com.hase.huatuo.healthcheck.model.StaffList;
+import com.hase.huatuo.healthcheck.model.UserInfo;
+import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.response.CommonResponse;
+import com.hase.huatuo.healthcheck.utils.SMSUtils;
 
 @Service
 public class HuatuoRegistrationService {
@@ -25,6 +29,9 @@ public class HuatuoRegistrationService {
     @Autowired
     private SMSInfoRepository smsInfoRepository;
 
+    @Autowired
+    private StaffListRepository staffListRepository;
+    
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
         if(!checkStaffId(registrationPostBody.getStaffId())){
@@ -129,5 +136,16 @@ public class HuatuoRegistrationService {
             return true;
         }
         return false;
+    }
+    
+    private boolean ifStaffInWhiteList(String staffId) {
+    	try {
+    		StaffList staffList = staffListRepository.findById(staffId).orElse(null);
+    	} catch(Exception e) {
+    		
+    	}
+    	
+    	
+    	return true;
     }
 }
