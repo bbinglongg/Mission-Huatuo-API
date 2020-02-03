@@ -15,7 +15,7 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
  
  
-@Component
+//@Component
 public class EmbeddedTomcatConfig implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
  
     @Override
