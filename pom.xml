@@ -111,7 +111,12 @@
             <artifactId>commons-text</artifactId>
             <version>1.6</version>
         </dependency>
-
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.5</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
