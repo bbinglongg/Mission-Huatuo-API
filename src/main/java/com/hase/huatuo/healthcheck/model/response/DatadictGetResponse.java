@@ -52,14 +52,14 @@ public class DatadictGetResponse {
 		
 		building = new HashMap<String, String>() {
 			{
-				put("1", "无 None");
+				put("1", "None");
 				put("2", "TKH OT1");
 				put("3", "TKH OT2");
-				put("4", "Jiang Wan Office (We Work)");
+				put("4", "Jiangwan Office (Wework)");
 				put("5", "Pazhou ODC");
-				put("6", "Tanchu ODC");
+				put("6", "Tancun ODC");
 				put("7", "Renfeng ODC");
-				put("8", "XiAn Center");
+				put("8", "Xi'an Centre");
 			}
 		};
 		
@@ -67,13 +67,13 @@ public class DatadictGetResponse {
 			{
 				put("1", new HashMap<String, String>() {
 					{
-						put("en-hk", "CN VPN");
+						put("en-hk", "VPN-CN");
 						put("zh-cn", "中国VPN");
 					}
 				});
 				put("2", new HashMap<String, String>() {
 					{
-						put("en-hk", "HK VPN");
+						put("en-hk", "VPN-HK");
 						put("zh-cn", "香港VPN");
 					}
 				});

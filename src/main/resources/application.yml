@@ -1,0 +1,70 @@
+app:
+  AppID: wx9812117be87d24d2
+  database: HUATUO-DEV
+spring:
+  profiles:
+    active: dev
+  mail:
+    username: 123456789@xxx.com
+    host: smtp.xxx.com
+    password: xxxxxxxx
+    port: 25
+    mail:
+      smtp:
+        auth: true
+      starttls:
+        enable: true
+        required: true
+  datasource:
+    url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: rbwm@123
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+server:
+  port: 9090
+  ssl:
+    key-store: huatuo.app77.cn.jks
+    key-alias: huatuo.app77.cn
+    key-store-type: JKS
+    key-store-password: s2737wii6667
+    enabled: true
+
+---
+app:
+  AppID: wx9812117be87d24d2
+  database: HUATUO
+spring:
+  profiles:
+    active: prod
+  mail:
+    username: 123456789@xxx.com
+    host: smtp.xxx.com
+    password: xxxxxxxx
+    port: 25
+    mail:
+      smtp:
+        auth: true
+      starttls:
+        enable: true
+        required: true
+  datasource:
+    url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: rbwm@123
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
+  ssl:
+    key-store: huatuo.app77.cn.jks
+    key-alias: huatuo.app77.cn
+    key-store-type: JKS
+    key-store-password: s2737wii6667
+    enabled: true
+
