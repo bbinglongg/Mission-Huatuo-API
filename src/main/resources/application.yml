@@ -15,6 +15,10 @@ spring:
       starttls:
         enable: true
         required: true
+  sms:
+    host: 47.106.180.164
+    path: /sms/sendSms
+    key: abd84853c6299f97
   datasource:
     url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
     username: root
