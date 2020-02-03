@@ -1,5 +1,13 @@
 app:
-  AppID: wx9812117be87d24d2
+  miniProgram:
+    center:
+      appId: wx9812117be87d24d2
+    hacn:
+      appId:
+    haseIT:
+      appId:
+---
+app:
   database: HUATUO-TEST
 spring:
   profiles:
@@ -34,16 +42,9 @@ server:
     max-threads: 200
     max-connections: 200
     connection-timeout: 3000
-  ssl:
-    key-store: huatuo.app77.cn.jks
-    key-alias: huatuo.app77.cn
-    key-store-type: JKS
-    key-store-password: s2737wii6667
-    enabled: true
 
 ---
 app:
-  AppID: wx9812117be87d24d2
   database: HUATUO
 spring:
   profiles:
@@ -73,10 +74,4 @@ server:
     max-threads: 200
     max-connections: 200
     connection-timeout: 3000
-  ssl:
-    key-store: huatuo.app77.cn.jks
-    key-alias: huatuo.app77.cn
-    key-store-type: JKS
-    key-store-password: s2737wii6667
-    enabled: true
 
