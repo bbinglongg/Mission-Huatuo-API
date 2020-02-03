@@ -1,18 +1,20 @@
 package com.hase.huatuo.healthcheck.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.fasterxml.jackson.databind.util.JSONWrappedObject;
+import com.hase.huatuo.healthcheck.model.request.SMSPostBody;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -24,46 +26,64 @@ public class SMSUtils {
     private String smsServerpath;
     @Value("${spring.sms.key}")
     private String smsServerkey;
+    @Value("${spring.sms.templete.register-verify}")
+    private String registerVerifyTemplate;
 
     private static SMSUtils smsutils;
 
     @PostConstruct
-    public void init(){
-        smsutils=this;
-        smsutils.smsServerHost=this.smsServerHost;
-        smsutils.smsServerpath=this.smsServerpath;
-        smsutils.smsServerkey=this.smsServerkey;
+    public void init() {
+        smsutils = this;
+        smsutils.smsServerHost = this.smsServerHost;
+        smsutils.smsServerpath = this.smsServerpath;
+        smsutils.smsServerkey = this.smsServerkey;
+        smsutils.registerVerifyTemplate = this.registerVerifyTemplate;
     }
 
-    public static boolean sendSMSVerifyCode(String mobileNumber,String verifyCode) {
-        boolean success = false;
-        StringBuffer smsBuilder = new StringBuffer("http://").append(smsutils.smsServerHost).append(smsutils.smsServerpath)
-                .append("?path=SMS").append("&content=verifyCode").append(verifyCode).append("&mobiles=").append(mobileNumber).append("&key=").append(smsutils.smsServerkey);
+    public static boolean sendSMSVerifyCode(String mobileNumber, String verifyCode) {
+        SMSPostBody smsPostBody = new SMSPostBody();
+        smsPostBody.setKey(smsutils.smsServerkey);
+        smsPostBody.setTemplateCode(smsutils.registerVerifyTemplate);
+        smsPostBody.setMobiles(mobileNumber);
+        Map<String,Object> templateParam = new HashMap<>();
+        templateParam.put("code",verifyCode);
+        smsPostBody.setTemplateParam(templateParam);
+        return sendSMS(smsPostBody);
+    }
+
+    public static boolean sendSMS(SMSPostBody smsPostBody) {
+        boolean sendSuccess = false;
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(smsBuilder.toString());
+        String url = "http://"+smsutils.smsServerHost + smsutils.smsServerpath;
+        HttpPost httpPost = new HttpPost(url);
         CloseableHttpResponse response = null;
+        httpPost.setHeader("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE);
+        ObjectMapper mapper = new ObjectMapper();
+        String entity = "";
         try {
-            response = httpClient.execute(httpGet);
-            if(response.getStatusLine().getStatusCode() == 200){
+            entity = mapper.writeValueAsString(smsPostBody);
+            httpPost.setEntity(new StringEntity(entity));
+            System.out.println("request parameters" + EntityUtils.toString(httpPost.getEntity()));
+            response = httpClient.execute(httpPost);
+            if (response != null && response.getStatusLine().getStatusCode() == 200) {
                 String content = EntityUtils.toString(response.getEntity(), "utf-8");
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String,Object> result = mapper.readValue(content,Map.class);
-                System.out.println("send SMS result "+result.get("code"));
-                System.out.println("send SMS result "+content);
-                if("200".equals(result.get("code")+"")){
-                    success = true;
+                Map<String, Object> result = mapper.readValue(content, Map.class);
+                System.out.println("send SMS result " + result.get("code"));
+                System.out.println("send SMS result " + content);
+                if ("200".equals(result.get("code") + "")) {
+                    sendSuccess = true;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            try{
+        } finally {
+            try {
                 response.close();//关闭连接
                 httpClient.close();//关闭浏览器
-            }catch (IOException ioe){
+            } catch (IOException ioe) {
                 System.out.println(ioe.getMessage());
             }
         }
-        return success;
+        return sendSuccess;
     }
 }

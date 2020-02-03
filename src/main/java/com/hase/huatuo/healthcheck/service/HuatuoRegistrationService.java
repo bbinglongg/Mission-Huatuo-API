@@ -35,7 +35,7 @@ public class HuatuoRegistrationService {
     
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
-        if(!checkStaffId(registrationPostBody.getStaffId())){
+        if(!ifStaffInWhiteList(registrationPostBody.getStaffId())){
             response.setCode("-1");
             response.setMsg("输入的staff ID不存在");
             return ResponseEntity.ok(response);
@@ -128,19 +128,6 @@ public class HuatuoRegistrationService {
     private boolean checkBeforeSendSMS(String mobileNumber){
         SMSInfo res = smsInfoRepository.findById(mobileNumber).orElse(null);
         return res == null || (new Date().getTime()-res.getCreatetime() > 60*1000);
-    }
-
-    /**
-     * staffId Valid return true
-     * @param staffId
-     * @return
-     */
-    private boolean checkStaffId(String staffId){
-        if(staffId != null && staffId.length()==8){
-            //check staffID valid
-            return true;
-        }
-        return false;
     }
     
     public boolean ifStaffInWhiteList(String staffId) {
