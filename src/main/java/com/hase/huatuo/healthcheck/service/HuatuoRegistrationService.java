@@ -138,14 +138,16 @@ public class HuatuoRegistrationService {
         return false;
     }
     
-    private boolean ifStaffInWhiteList(String staffId) {
+    public boolean ifStaffInWhiteList(String staffId) {
     	try {
     		StaffList staffList = staffListRepository.findById(staffId).orElse(null);
+    		if(staffList != null) {
+    			return true;
+    		}
     	} catch(Exception e) {
     		
     	}
     	
-    	
-    	return true;
+    	return false;
     }
 }
