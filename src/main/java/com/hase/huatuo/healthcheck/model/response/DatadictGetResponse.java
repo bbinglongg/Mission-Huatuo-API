@@ -67,13 +67,13 @@ public class DatadictGetResponse {
 			{
 				put("1", new HashMap<String, String>() {
 					{
-						put("en-hk", "CN VPN");
+						put("en-hk", "VPN-CN");
 						put("zh-cn", "中国VPN");
 					}
 				});
 				put("2", new HashMap<String, String>() {
 					{
-						put("en-hk", "HK VPN");
+						put("en-hk", "VPN-HK");
 						put("zh-cn", "香港VPN");
 					}
 				});
