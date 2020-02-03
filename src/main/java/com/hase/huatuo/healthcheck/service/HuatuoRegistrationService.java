@@ -37,7 +37,7 @@ public class HuatuoRegistrationService {
         CommonResponse response = new CommonResponse();
         if(!checkStaffId(registrationPostBody.getStaffId())){
             response.setCode("-1");
-            response.setMsg("please input valid staff ID");
+            response.setMsg("输入的staff ID不存在");
             return ResponseEntity.ok(response);
         }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
@@ -61,7 +61,7 @@ public class HuatuoRegistrationService {
             return ResponseEntity.ok(response);
         }else{
             response.setCode("-3");
-            response.setMsg("Verification code is incorrect or expired");
+            response.setMsg("验证码错误或已失效");
             return ResponseEntity.ok(response);
         }
     }
