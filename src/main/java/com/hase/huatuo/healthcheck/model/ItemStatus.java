@@ -12,7 +12,7 @@ import javax.persistence.Id;
 public class ItemStatus {
     @Id
     @Column
-    private String staffId;
+    private Long staffId;
     @Column
     private String itemId;
     @Column

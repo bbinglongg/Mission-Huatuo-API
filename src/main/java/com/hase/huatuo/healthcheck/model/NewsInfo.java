@@ -14,15 +14,15 @@ public class NewsInfo {
     @Id
     @GeneratedValue()
     @Column
-    private String id;
+    private Long id;
     @Column
     private String title;
-    @Column(columnDefinition="BLOB")
+    @Column(columnDefinition="blob")
     private String  content;
     @Column
     private Date date;
     @Column
-    private Integer priority;
+    private int priority;
     @Column
     private String source;
     @Column

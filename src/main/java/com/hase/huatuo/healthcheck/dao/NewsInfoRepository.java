@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsInfoRepository extends JpaRepository<NewsInfo, String> {
+    NewsInfo getNewsInfoByIdEquals(Long  newsId);
 }
