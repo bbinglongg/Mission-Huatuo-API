@@ -43,6 +43,9 @@ public class HuatuoResource {
     @Autowired
     private HuatuoWechatService huatuoWechatService;
 
+    @Autowired
+    private NewsInfoListService newsInfoListService;
+    
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
     	validHealthRequest(healthPostBody);
@@ -106,4 +109,11 @@ public class HuatuoResource {
     public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
     }
+    
+    @PostMapping("/news-info/lists")
+    public NewsInfoListResponse newsInfoList(@RequestBody final NewsInfoListRequestBody newsInfoListRequestBody) {
+    	
+    	return newsInfoListService.getNewsInfoList(newsInfoListRequestBody);
+    }
+    
 }
