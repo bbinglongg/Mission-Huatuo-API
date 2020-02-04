@@ -2,10 +2,12 @@ package com.hase.huatuo.healthcheck.model;
 
 import lombok.Data;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -17,12 +19,12 @@ public class NewsInfo {
     private Long id;
     @Column
     private String title;
-    @Column(columnDefinition="blob")
+    @Column(columnDefinition="BLOB")
     private String  content;
     @Column
     private Date date;
     @Column
-    private int priority;
+    private Integer priority;
     @Column
     private String source;
     @Column

@@ -34,6 +34,19 @@ public class HuatuoRegistrationService {
     
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
+        SMSInfo smsInfo = smsInfoRepository.findById(registrationPostBody.getMobileNum()).orElse(null);
+        if(smsInfo == null){
+            System.out.println("mobile number have not send verify code: "+registrationPostBody.getMobileNum());
+            response.setCode("-2");
+            response.setMsg("验证码错误或已失效");
+            return ResponseEntity.ok(response);
+        }
+        if(!registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) ||
+                (new Date().getTime() - smsInfo.getCreatetime() > 90 * 1000)){
+            response.setCode("-2");
+            response.setMsg("验证码错误或已失效");
+            return ResponseEntity.ok(response);
+        }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
         if(registerRecords.size() != 0){
             System.out.println("输入的staff ID 已注册");
@@ -41,23 +54,15 @@ public class HuatuoRegistrationService {
             response.setMsg("输入的staff ID 已注册");
             return ResponseEntity.ok(response);
         }
-        SMSInfo smsInfo = smsInfoRepository.getOne(registrationPostBody.getMobileNum());
-        if(registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) &&
-                (new Date().getTime() - smsInfo.getCreatetime() < 90 * 1000)){
-            UserInfo userInfo = new UserInfo();
-            userInfo.setMobileNum(registrationPostBody.getMobileNum());
-            userInfo.setAppId(registrationPostBody.getAppId());
-            userInfo.setOpenId(registrationPostBody.getOpenId());
-            userInfo.setStaffId(registrationPostBody.getStaffId());
-            userInfoRepository.saveAndFlush(userInfo);
-            response.setCode("200");
-            response.setMsg("success");
-            return ResponseEntity.ok(response);
-        }else{
-            response.setCode("-2");
-            response.setMsg("验证码错误或已失效");
-            return ResponseEntity.ok(response);
-        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setMobileNum(registrationPostBody.getMobileNum());
+        userInfo.setAppId(registrationPostBody.getAppId());
+        userInfo.setOpenId(registrationPostBody.getOpenId());
+        userInfo.setStaffId(registrationPostBody.getStaffId());
+        userInfoRepository.saveAndFlush(userInfo);
+        response.setCode("200");
+        response.setMsg("success");
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<CommonResponse> sendVerifyCode(SMSInfo smsInfo){
@@ -77,12 +82,12 @@ public class HuatuoRegistrationService {
             return ResponseEntity.ok(response);
         }
         String verifyCode = String.valueOf(new SecureRandom().nextInt(8999)+1000);
+        smsInfo.setVerifyCode(verifyCode);
+        smsInfo.setCreatetime(new Date().getTime());
+        smsInfoRepository.saveAndFlush(smsInfo);
         System.out.println("SMS verify code "+verifyCode);
         boolean res = SMSUtils.sendSMSVerifyCode(smsInfo.getMobileNum(),verifyCode);
         if(res){
-            smsInfo.setVerifyCode(verifyCode);
-            smsInfo.setCreatetime(new Date().getTime());
-            smsInfoRepository.saveAndFlush(smsInfo);
             response.setCode("200");
             response.setMsg("success");
             return ResponseEntity.ok(response);

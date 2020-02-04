@@ -1,18 +1,15 @@
 wx:
   miniapp:
     configs:
-      - appid: wx9812117be87d24d2 #center
+        #haseIT
+      - appid: wx9812117be87d24d2
         secret: d86b70d7565f479efabc98b12434f679
         token:
         aesKey:
         msgDataFormat: JSON
-      - appid:  #haseIT
-        secret:
-        token:
-        aesKey:
-        msgDataFormat: JSON
-      - appid:  #hacn
-        secret:
+        #hacn
+      - appid: wxf60257610325b729
+        secret: 982860fa2a00708062119fd49983e9be
         token:
         aesKey:
         msgDataFormat: JSON
@@ -70,6 +67,12 @@ spring:
       starttls:
         enable: true
         required: true
+  sms:
+    host: 47.106.180.164
+    path: /sms/sendSmsByTemplet
+    key: abd84853c6299f97
+    templete:
+      register-verify: SMS_182840777
   datasource:
     url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
     username: root
