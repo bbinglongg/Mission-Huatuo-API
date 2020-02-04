@@ -25,7 +25,7 @@ public class HuatuoNewsService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info where enable='Y' and id not in (select i.item_id from item_status i, user_info u where i.staff_id=u.staff_Id and u.app_id=?)";
+    public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info where enable='Y' and id not in (select i.item_id from item_status i, user_info u where i.staff_id=u.staff_Id and u.open_id=? and i.item_type='news')";
 
     public ResponseEntity<CommonResponse> getImportantNewsList(final NewsNotReadRequest newsNotReadRequest){
         CommonResponse commonResponse = new CommonResponse();
