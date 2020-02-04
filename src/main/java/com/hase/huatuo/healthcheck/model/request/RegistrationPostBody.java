@@ -1,10 +1,19 @@
 package com.hase.huatuo.healthcheck.model.request;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "RequestBody for datadict request")
 public class RegistrationPostBody {
+    @ApiModelProperty(value = "appId123456", notes = "app Id", dataType = "java.lang.String")
     private String appId;
+    @ApiModelProperty(value = "openId78sasdwde", notes = "open ID get after authorization", dataType = "java.lang.String")
     private String openId;
+    @ApiModelProperty(value = "44001234", notes = "user's staffID", dataType = "java.lang.String")
     private String staffId;
+    @ApiModelProperty(value = "13999778899", notes = "user's mobileNumber", dataType = "java.lang.String")
     private String mobileNum;
+    @ApiModelProperty(value = "1234", notes = "verify code get from SMS", dataType = "java.lang.String")
     private String verifyCode;
 
     public String getAppId() {

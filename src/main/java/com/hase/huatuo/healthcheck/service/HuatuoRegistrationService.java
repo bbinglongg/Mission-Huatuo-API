@@ -34,15 +34,10 @@ public class HuatuoRegistrationService {
     
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
-        if(!checkStaffId(registrationPostBody.getStaffId())){
-            response.setCode("-1");
-            response.setMsg("please input valid staff ID");
-            return ResponseEntity.ok(response);
-        }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
         if(registerRecords.size() != 0){
             System.out.println("输入的staff ID 已注册");
-            response.setCode("-2");
+            response.setCode("-1");
             response.setMsg("输入的staff ID 已注册");
             return ResponseEntity.ok(response);
         }
@@ -59,8 +54,8 @@ public class HuatuoRegistrationService {
             response.setMsg("success");
             return ResponseEntity.ok(response);
         }else{
-            response.setCode("-3");
-            response.setMsg("Verification code is incorrect or expired");
+            response.setCode("-2");
+            response.setMsg("验证码错误或已失效");
             return ResponseEntity.ok(response);
         }
     }
@@ -131,19 +126,6 @@ public class HuatuoRegistrationService {
     private boolean checkBeforeSendSMS(String mobileNumber){
         SMSInfo res = smsInfoRepository.findById(mobileNumber).orElse(null);
         return res == null || (new Date().getTime()-res.getCreatetime() > 60*1000);
-    }
-
-    /**
-     * staffId Valid return true
-     * @param staffId
-     * @return
-     */
-    private boolean checkStaffId(String staffId){
-        if(staffId != null && staffId.length()==8){
-            //check staffID valid
-            return true;
-        }
-        return false;
     }
     
     public boolean ifStaffInWhiteList(String staffId) {
