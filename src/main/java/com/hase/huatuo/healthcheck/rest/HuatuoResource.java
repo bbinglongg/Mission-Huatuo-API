@@ -3,6 +3,7 @@ package com.hase.huatuo.healthcheck.rest;
 import java.text.ParseException;
 import java.util.List;
 
+import com.hase.huatuo.healthcheck.model.NewsInfo;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.UserInfo;
 import com.hase.huatuo.healthcheck.model.request.*;
@@ -42,6 +43,9 @@ public class HuatuoResource {
 
     @Autowired
     private HuatuoWechatService huatuoWechatService;
+
+    @Autowired
+    private HuatuoNewsService huatuoNewsService;
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -105,5 +109,11 @@ public class HuatuoResource {
     @ApiOperation(value = "wechat-login", notes = "wechat login", httpMethod = "POST")
     public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
+    }
+
+    @GetMapping("/important-news")
+    @ApiOperation(value = "important-news", notes = "important news", httpMethod = "GET")
+    public ResponseEntity<CommonResponse> getImportantNewsList() throws WxErrorException {
+        return huatuoNewsService.getImportantNewsList();
     }
 }
