@@ -5,9 +5,10 @@ import java.util.List;
 
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.UserInfo;
-import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.request.*;
 import com.hase.huatuo.healthcheck.model.response.*;
-import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
+import com.hase.huatuo.healthcheck.service.*;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
-import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
-import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
-import com.hase.huatuo.healthcheck.model.request.VpnRequest;
-import com.hase.huatuo.healthcheck.service.HealthReportService;
-import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
-import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -44,6 +39,10 @@ public class HuatuoResource {
 
     @Autowired
     private HuatuoRegistrationService huatuoRegistrationService;
+
+    @Autowired
+    private HuatuoWechatService huatuoWechatService;
+
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
     	validHealthRequest(healthPostBody);
@@ -101,6 +100,10 @@ public class HuatuoResource {
     	// other field checking
     		
     }
-    
 
+    @PostMapping("/wechat-login")
+    @ApiOperation(value = "wechat-login", notes = "wechat login", httpMethod = "POST")
+    public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
+        return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
+    }
 }

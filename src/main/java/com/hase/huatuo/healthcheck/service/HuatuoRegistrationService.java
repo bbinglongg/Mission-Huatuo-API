@@ -3,7 +3,6 @@ package com.hase.huatuo.healthcheck.service;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +121,10 @@ public class HuatuoRegistrationService {
         String mobileNum = registrationPostBody.getMobileNum();
         if(mobileNum == null){
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "mobileNum is null", null);
+        }
+        
+        if(!ifStaffInWhiteList(registrationPostBody.getStaffId())){
+        	ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "the staff ID cannot register", null);
         }
     }
 
