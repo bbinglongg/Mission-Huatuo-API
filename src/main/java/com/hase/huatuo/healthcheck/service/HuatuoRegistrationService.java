@@ -67,7 +67,7 @@ public class HuatuoRegistrationService {
 
     public ResponseEntity<CommonResponse> sendVerifyCode(SMSInfo smsInfo){
         CommonResponse response = new CommonResponse();
-        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+        String regex = "^1\\d{10}$";
         Pattern pattern = Pattern.compile(regex);
         String mobileNum = smsInfo.getMobileNum();
         boolean mobileNumValid = pattern.matcher(mobileNum).matches();
@@ -123,8 +123,8 @@ public class HuatuoRegistrationService {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "mobileNum is null", null);
         }
         
-        if(!ifStaffInWhiteList(registrationPostBody.getStaffId())){
-        	ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "the staff ID cannot register", null);
+        if(!ifStaffInWhiteList(registrationPostBody.getStaffId(),registrationPostBody.getMobileNum())){
+        	ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
         }
     }
 
@@ -133,16 +133,18 @@ public class HuatuoRegistrationService {
         return res == null || (new Date().getTime()-res.getCreatetime() > 60*1000);
     }
     
-    public boolean ifStaffInWhiteList(String staffId) {
+    public boolean ifStaffInWhiteList(String staffId,String mobileNum) {
     	try {
     		StaffList staffList = staffListRepository.findById(staffId).orElse(null);
-    		if(staffList != null) {
-    			return true;
+    		if(staffList != null ) {
+    		    if(staffList.getMobileNum() != null && staffList.getMobileNum().length() != 0){
+                    return staffList.getMobileNum().equals(mobileNum);
+                }
+    		    return true;
     		}
     	} catch(Exception e) {
 
     	}
-
     	return false;
     }
 }
