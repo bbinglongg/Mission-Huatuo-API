@@ -34,15 +34,10 @@ public class HuatuoRegistrationService {
     
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
-        if(!ifStaffInWhiteList(registrationPostBody.getStaffId())){
-            response.setCode("-1");
-            response.setMsg("输入的staff ID不存在");
-            return ResponseEntity.ok(response);
-        }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
         if(registerRecords.size() != 0){
             System.out.println("输入的staff ID 已注册");
-            response.setCode("-2");
+            response.setCode("-1");
             response.setMsg("输入的staff ID 已注册");
             return ResponseEntity.ok(response);
         }
@@ -59,7 +54,7 @@ public class HuatuoRegistrationService {
             response.setMsg("success");
             return ResponseEntity.ok(response);
         }else{
-            response.setCode("-3");
+            response.setCode("-2");
             response.setMsg("验证码错误或已失效");
             return ResponseEntity.ok(response);
         }
