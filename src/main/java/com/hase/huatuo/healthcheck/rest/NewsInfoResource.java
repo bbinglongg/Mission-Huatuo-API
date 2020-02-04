@@ -27,8 +27,8 @@ public class NewsInfoResource {
     public ResponseEntity<String> upDateNewsInfo(@RequestBody @Valid NewsDetailRequest detail)
     {
         final String newsId = detail.getNewsId();
-        final String staffId = detail.getStaffId();
-       ItemStatus itemStatus  = newsStatusRep.getItemStatusBy(newsId,Long.valueOf(staffId));
+        final String openId = detail.getOpenId();
+       ItemStatus itemStatus  = newsStatusRep.getItemStatusByOpenId(newsId,openId);
        if("N".equals(itemStatus.getItemType())){
            itemStatus.setItemType("Y");
            newsStatusRep.saveAndFlush(itemStatus);

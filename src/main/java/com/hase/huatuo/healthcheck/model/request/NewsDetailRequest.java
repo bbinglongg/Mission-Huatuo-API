@@ -1,26 +1,13 @@
 package com.hase.huatuo.healthcheck.model.request;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
+@Data
 public class NewsDetailRequest {
     @NotBlank
-    private String staffId;
+    private String openId;
     @NotBlank
     private String newsId;
-
-    public String getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
-
-    public String getNewsId() {
-        return newsId;
-    }
-
-    public void setNewsId(String newsId) {
-        this.newsId = newsId;
-    }
 }
