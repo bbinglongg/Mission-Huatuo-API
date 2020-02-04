@@ -11,7 +11,7 @@ public class NewsInfo {
     @Id
     @GeneratedValue()
     @Column
-    private String id;
+    private Long id;
     @Column
     private String title;
     @Column(columnDefinition="BLOB")
