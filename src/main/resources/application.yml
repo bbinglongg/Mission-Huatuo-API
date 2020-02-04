@@ -17,7 +17,7 @@ wx:
 app:
   database: HUATUO-TEST
 spring:
-  profiles: test
+  profiles: dev
   mail:
     username: 123456789@xxx.com
     host: smtp.xxx.com
