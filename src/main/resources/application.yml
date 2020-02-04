@@ -30,7 +30,7 @@ spring:
         enable: true
         required: true
   sms:
-    host: 47.106.180.164
+    host: 47.106.180.164:8080
     path: /sms/sendSmsByTemplet
     key: abd84853c6299f97
     templete:
