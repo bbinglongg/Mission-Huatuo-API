@@ -20,7 +20,7 @@ public class NewsInfoResource {
     @Autowired
     private NewsStatusRepository newsStatusRep;
 
-    @PostMapping(path = "news/detail")
+    @PostMapping(path = "/news/detail")
     public ResponseEntity<String> upDateNewsInfo(@RequestBody NewsDetailRequest detail)
     {
         final String newsId = detail.getNewsId();
