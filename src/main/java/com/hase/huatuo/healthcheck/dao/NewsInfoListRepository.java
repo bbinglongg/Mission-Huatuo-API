@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.hase.huatuo.healthcheck.dao.entity.NewsInfoEntity;
 
 @Repository
-public interface NewsInfoRepository extends JpaRepository<NewsInfoEntity,String> {
+public interface NewsInfoListRepository extends JpaRepository<NewsInfoEntity,String> {
 	
 }
