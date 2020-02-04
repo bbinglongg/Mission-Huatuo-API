@@ -1,4 +1,4 @@
-package com.hase.huatuo.healthcheck.model;
+package com.hase.huatuo.healthcheck.dao.entity;
 
 import java.io.Serializable;
 
@@ -9,7 +9,10 @@ import javax.persistence.Table;
 
 @Entity()
 @Table(name="staff_list")
-public class StaffList implements Serializable {
+public class StaffListEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	@Id
     @Column(name="staff_id")
     private String staffId;

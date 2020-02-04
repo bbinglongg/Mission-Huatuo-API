@@ -58,6 +58,9 @@ public class HuatuoResource {
     private HuatuoWechatService huatuoWechatService;
 
     @Autowired
+    private NewsInfoListService newsInfoListService;
+    
+    @Autowired
     private HuatuoNewsService huatuoNewsService;
 
     @PostMapping("/health")
@@ -124,9 +127,16 @@ public class HuatuoResource {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
     }
 
+    @PostMapping("/news-info/lists")
+    public NewsInfoListResponse newsInfoList(@RequestBody final NewsInfoListRequestBody newsInfoListRequestBody) {
+    	
+    	return newsInfoListService.getNewsInfoList(newsInfoListRequestBody);
+    }
+
     @PostMapping("/important-news")
     @ApiOperation(value = "important-news", notes = "important news and unread number", httpMethod = "POST")
     public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
         return huatuoNewsService.getImportantNewsList(newsNotReadReq);
     }
+
 }
