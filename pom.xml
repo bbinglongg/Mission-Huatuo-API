@@ -5,7 +5,7 @@
 
     <groupId>com.hase.huatuo</groupId>
     <artifactId>hase-huotuo-api</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>hase-huotuo-api</name>
     <packaging>jar</packaging>
 
