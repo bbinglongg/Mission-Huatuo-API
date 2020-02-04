@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImportantNewsResponse {
-    private String newsId;
+    private Long newsId;
     private String newsTitle;
 }
