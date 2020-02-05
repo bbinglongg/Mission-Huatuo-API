@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * send mail
@@ -34,7 +35,7 @@ public class MailUtils {
         mailUtils.fromMail = this.fromMail;
     }
 
-    public static void sendNotifyEmail(String[] toMail, String status, String position) {
+    public static void sendNotifyEmail(List<String> toMailList, String status, String position) {
         String contentTemplate =
                 "Dear Sir/Madam,\n" +
                 "\n" +
@@ -44,6 +45,8 @@ public class MailUtils {
                 "Best Regards.\n" +
                 "HUATUO APP";
         String content = contentTemplate.replaceAll("\\{status}", status).replaceAll("\\{city_workplace}", position);
+        toMailList.add(mailUtils.fromMail);
+        String[] toMail = toMailList.toArray(new String[toMailList.size()]);
         send(toMail, mailUtils.worningSubject,content);
     }
 
@@ -58,7 +61,12 @@ public class MailUtils {
         mainMessage.setSubject(subject);
         //发送的内容
         mainMessage.setText(context);
-        mailUtils.jms.send(mainMessage);
+        try{
+            mailUtils.jms.send(mainMessage);
+        }catch (Exception e){
+            System.out.println("send email got error");
+            e.printStackTrace();
+        }
     }
 
     public static void send(String[] toMail, String context) {
