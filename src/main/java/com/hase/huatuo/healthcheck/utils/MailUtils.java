@@ -58,7 +58,12 @@ public class MailUtils {
         mainMessage.setSubject(subject);
         //发送的内容
         mainMessage.setText(context);
-        mailUtils.jms.send(mainMessage);
+        try{
+            mailUtils.jms.send(mainMessage);
+        }catch (Exception e){
+            System.out.println("send email got error");
+            e.printStackTrace();
+        }
     }
 
     public static void send(String[] toMail, String context) {
