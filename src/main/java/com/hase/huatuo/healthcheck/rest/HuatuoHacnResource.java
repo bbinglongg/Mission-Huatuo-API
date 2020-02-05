@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hase.huatuo.healthcheck.dao.entity.HealthInfoHacn;
+import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnEnquiryBody;
+import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnPostBody;
 import com.hase.huatuo.healthcheck.model.request.TripDetailReqBody;
 import com.hase.huatuo.healthcheck.model.request.TripHistoryReqBody;
 import com.hase.huatuo.healthcheck.model.request.TripSurveyPostBody;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
+import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
+import com.hase.huatuo.healthcheck.service.HuatuoHealthHacnService;
 import com.hase.huatuo.healthcheck.service.HuatuoTripDetailService;
 import com.hase.huatuo.healthcheck.service.HuatuoTripHistoryService;
 import com.hase.huatuo.healthcheck.service.HuatuoTripSurveyService;
@@ -36,7 +41,9 @@ public class HuatuoHacnResource {
 	@Autowired
     private HuatuoTripSurveyService huatuoTripSurveyService;
 
-
+	@Autowired
+    private HuatuoHealthHacnService huatuoHealthhacnService;
+	
     @PostMapping("/trip/history")
     @ApiOperation(value = "hacn-trip-history", notes = "hacn trip history", httpMethod = "POST")
     public ResponseEntity getTripHistory(@Valid @RequestBody final TripHistoryReqBody tripHistoryBody) {
@@ -56,4 +63,14 @@ public class HuatuoHacnResource {
         return huatuoTripSurveyService.addTripSurvey(tripSurveyPostBody);
     }
     
+    @PostMapping("/health/report")
+    public HealthPostResponse uploadHealthHacn(@RequestBody final HealthInfoHacnPostBody healthPostBody) {
+    	
+    	return huatuoHealthhacnService.uploadHealthHacn(healthPostBody);
+    }
+    
+    @PostMapping("/health/enquiry")
+    public HealthInfoHacn getHealthInfoHacn(@RequestBody final HealthInfoHacnEnquiryBody enquiryBody) {
+    	return huatuoHealthhacnService.getHealthInfoHacn(enquiryBody);
+    }
 }
