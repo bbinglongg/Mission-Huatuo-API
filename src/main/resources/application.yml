@@ -19,9 +19,9 @@ app:
 spring:
   profiles: test
   mail:
-    username: 123456789@xxx.com
-    host: smtp.xxx.com
-    password: xxxxxxxx
+    username: huatuo_hase_admin@163.com
+    host: smtp.163.com
+    password: hase0804
     port: 25
     mail:
       smtp:
@@ -29,12 +29,15 @@ spring:
       starttls:
         enable: true
         required: true
+      subject:
+        "[CoV Emergency Message] New Reported Case of Coronavirus"
   sms:
-    host: 47.106.180.164
+    host: 47.106.180.164:8080
     path: /sms/sendSmsByTemplet
     key: abd84853c6299f97
-    templete:
+    template:
       register-verify: SMS_182840777
+      alert-health-report: SMS_183200260
   datasource:
     url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
     username: root
@@ -67,6 +70,13 @@ spring:
       starttls:
         enable: true
         required: true
+  sms:
+    host: 47.106.180.164
+    path: /sms/sendSmsByTemplet
+    key: abd84853c6299f97
+    template:
+      register-verify: SMS_182840777
+      alert-health-report: SMS_183200067
   datasource:
     url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
     username: root
