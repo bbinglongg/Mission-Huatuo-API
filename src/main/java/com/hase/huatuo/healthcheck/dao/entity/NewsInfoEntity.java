@@ -25,7 +25,7 @@ public class NewsInfoEntity implements Serializable {
     private String date;
     @Column(name="source")
     private String source;
-    @Column(name="a")
+    
     private String a;
     
 //    @Transient
