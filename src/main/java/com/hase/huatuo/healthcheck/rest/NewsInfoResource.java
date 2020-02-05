@@ -26,6 +26,8 @@ public class NewsInfoResource {
 
 	public static final String HEALTH_STATISTIC_SQL = "select count(1) from item_status where staff_id=? and item_id=? and item_type='news'";
 
+	public static final String HEALTH_UPDATE_SQL = "insert into item_status values (?, ?, ?)";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -52,11 +54,9 @@ public class NewsInfoResource {
 				new Object[] { detail.getStaffId(), detail.getNewsId() }, Integer.class);
 
 		if (num < 1) {
-			ItemStatus newItemStatus = new ItemStatus();
-			newItemStatus.setItemType("news");
-			newItemStatus.setItemId(newsId);
-			newItemStatus.setStaffId(Long.valueOf(detail.getStaffId()));
-			newsStatusRep.saveAndFlush(newItemStatus);
+			int result = jdbcTemplate.update(HEALTH_UPDATE_SQL,
+					new Object[] { detail.getStaffId(), detail.getNewsId(), "news" });
+			
 		}
 
 		NewsInfo info = newsInfo.getNewsInfoByIdEquals(Long.valueOf(newsId));
