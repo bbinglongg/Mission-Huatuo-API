@@ -26,8 +26,10 @@ public class SMSUtils {
     private String smsServerpath;
     @Value("${spring.sms.key}")
     private String smsServerkey;
-    @Value("${spring.sms.templete.register-verify}")
+    @Value("${spring.sms.template.register-verify}")
     private String registerVerifyTemplate;
+    @Value("${spring.sms.template.alert-health-report}")
+    private String alertHealthReportTemplate;
 
     private static SMSUtils smsutils;
 
@@ -85,5 +87,18 @@ public class SMSUtils {
             }
         }
         return sendSuccess;
+    }
+
+    public static boolean sendSMSHuaTuoReport(String mobileNumbers, String status, String city, String workplace) {
+        SMSPostBody smsPostBody = new SMSPostBody();
+        smsPostBody.setKey(smsutils.smsServerkey);
+        smsPostBody.setTemplateCode(smsutils.alertHealthReportTemplate);
+        smsPostBody.setMobiles(mobileNumbers);
+        Map<String,Object> templateParam = new HashMap<>();
+        templateParam.put("status", status);
+        templateParam.put("city", city);
+        templateParam.put("workplace", workplace);
+        smsPostBody.setTemplateParam(templateParam);
+        return sendSMS(smsPostBody);
     }
 }

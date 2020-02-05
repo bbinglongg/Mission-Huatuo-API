@@ -3,6 +3,11 @@ package com.hase.huatuo.healthcheck.service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.hase.huatuo.healthcheck.dao.LocationRepository;
+import com.hase.huatuo.healthcheck.dao.NotifyRepository;
+import com.hase.huatuo.healthcheck.model.Location;
+import com.hase.huatuo.healthcheck.utils.SMSUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -18,13 +23,23 @@ import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
 import com.hase.huatuo.healthcheck.model.request.HealthRequest;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthRequestResponse;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HuatuoHealthService {
 
 	@Autowired
 	private PersonHealthInfoRepository recordsRepository;
-	
+
+	@Autowired
+	private NotifyRepository notifyRepository;
+
+	@Autowired
+	private LocationRepository locationRepository;
+
 	@PersistenceContext
     private EntityManager entityManager;
 	
@@ -89,8 +104,25 @@ public class HuatuoHealthService {
 		for (int i = 0; i < list.length; i++) {
 			pi.getId().setWorkplace(list[i]);
 			recordsRepository.save(pi);
+			String healthStatus = healthPostBody.getHealthStatus();
+			if ("1".equalsIgnoreCase(healthStatus) || "2".equalsIgnoreCase(healthStatus)) {
+				caseNotifyManger(list[i], healthPostBody.getHealthStatus());
+			}
 		}
 		recordsRepository.flush();
+	}
+
+	private void caseNotifyManger(String workplace, String healthStatus) {
+		List<String> managerStaffMobileNumbers = notifyRepository.notifyStaffMobileNumbers();
+		if (!CollectionUtils.isEmpty(managerStaffMobileNumbers)) {
+			String managerStaffMobileNumbersString = StringUtils.join(managerStaffMobileNumbers, ",");
+			String statusText = "1".equalsIgnoreCase(healthStatus)? "CONFIRM":"SUSPECT";
+			Optional<Location> locationOptional = locationRepository.findById(workplace);
+			if(locationOptional.isPresent()){
+				Location location = locationOptional.get();
+				SMSUtils.sendSMSHuaTuoReport(managerStaffMobileNumbersString, statusText, location.getCity(), location.getWorkplaceEnName());
+			}
+		}
 	}
 
 	public HealthRequestResponse getPersonHealth(HealthRequest healthRequest) {
