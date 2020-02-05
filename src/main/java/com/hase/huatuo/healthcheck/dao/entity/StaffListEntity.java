@@ -18,6 +18,8 @@ public class StaffListEntity implements Serializable {
     private String staffId;
     @Column(name="mobile_num")
     private String mobileNum;
+    @Column(name="email_address")
+    private String emailAddress;
 
     public String getStaffId() {
         return staffId;
@@ -35,4 +37,11 @@ public class StaffListEntity implements Serializable {
         this.mobileNum = mobileNum;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 }

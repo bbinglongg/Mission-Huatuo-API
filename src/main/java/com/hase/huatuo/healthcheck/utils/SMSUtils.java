@@ -96,8 +96,11 @@ public class SMSUtils {
         smsPostBody.setMobiles(mobileNumbers);
         Map<String,Object> templateParam = new HashMap<>();
         templateParam.put("status", status);
-        templateParam.put("city", city);
-        templateParam.put("workplace", workplace);
+        String  position= city+"-"+workplace;
+        if(position.length()>20){
+            position = position.substring(0,20);
+        }
+        templateParam.put("city_workplace", position);
         smsPostBody.setTemplateParam(templateParam);
         return sendSMS(smsPostBody);
     }
