@@ -22,6 +22,8 @@ import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 
 import io.swagger.annotations.ApiOperation;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping({"/api","/api/v1"})
@@ -43,6 +45,12 @@ public class HuatuoResource {
     @Autowired
     private HuatuoWechatService huatuoWechatService;
 
+    @Autowired
+    private StaffNeedsCollectionsOfHacnService needsCollectionsOfHacnService;
+
+    @Autowired
+    private HealthReportOfHacnService healthReportOfHacnService;
+
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
     	validHealthRequest(healthPostBody);
@@ -53,6 +61,11 @@ public class HuatuoResource {
     @GetMapping("/health")
     public ResponseEntity<List<AreaReport>> requestHealth(@RequestHeader("X-IS-DUMMY") String isDummy) {
     	return healthReportService.enquiry(isDummy);
+    }
+
+    @GetMapping("/hacn/health")
+    public ResponseEntity<AreaReportForHacn> requestHealthOfHacn() {
+        return healthReportOfHacnService.enquiry();
     }
     
     @PostMapping("/vpn")
@@ -105,5 +118,11 @@ public class HuatuoResource {
     @ApiOperation(value = "wechat-login", notes = "wechat login", httpMethod = "POST")
     public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
+    }
+
+    @PostMapping("/hacn/needs-collection")
+    @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
+    public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
+        return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
     }
 }
