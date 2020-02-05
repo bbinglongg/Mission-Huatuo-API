@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.UserInfo;
+import com.hase.huatuo.healthcheck.model.VpnInfo;
 import com.hase.huatuo.healthcheck.model.request.*;
 import com.hase.huatuo.healthcheck.model.response.*;
 import com.hase.huatuo.healthcheck.service.*;
@@ -66,6 +67,16 @@ public class HuatuoResource {
     @ApiOperation(value = "vpnReport", notes = "Index VPN status report", httpMethod = "POST")
     public ResponseEntity<VpnReportResponse> loadVPNStateDashboard(@RequestBody final VpnReportRequest vpnReportRequest) throws ParseException {
         return ResponseEntity.ok(new VpnReportResponse(huatuoVPNService.loadVPNStateDashboard(vpnReportRequest)));
+    }
+
+    @PostMapping("/vpn/reportQuery")
+    @ApiOperation(value = "vpnReportView", notes = "Index VPN status report", httpMethod = "POST")
+    public ResponseEntity<VpnReportViewResponse> queryVPNReport(@RequestBody final VpnReportQueryRequest vpnReportQueryRequest) throws ParseException {
+        List<VpnInfo> vpnInfoList = huatuoVPNService.queryVPNReport(vpnReportQueryRequest);
+        VpnReportViewResponse response = new VpnReportViewResponse();
+        response.setItems(vpnInfoList);
+        response.setTotal(vpnInfoList.size());
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/datadict")
