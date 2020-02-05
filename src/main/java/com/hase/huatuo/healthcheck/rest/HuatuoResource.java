@@ -3,12 +3,6 @@ package com.hase.huatuo.healthcheck.rest;
 import java.text.ParseException;
 import java.util.List;
 
-import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.UserInfo;
-import com.hase.huatuo.healthcheck.model.request.*;
-import com.hase.huatuo.healthcheck.model.response.*;
-import com.hase.huatuo.healthcheck.service.*;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
+import com.hase.huatuo.healthcheck.model.SMSInfo;
+import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
+import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
+import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
+import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
+import com.hase.huatuo.healthcheck.model.request.VpnRequest;
+import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
+import com.hase.huatuo.healthcheck.model.response.AreaReport;
+import com.hase.huatuo.healthcheck.model.response.CommonResponse;
+import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
+import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
+import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
+import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
+import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
+import com.hase.huatuo.healthcheck.service.HealthReportService;
+import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
+import com.hase.huatuo.healthcheck.service.HuatuoNewsService;
+import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
+import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
+import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
+import com.hase.huatuo.healthcheck.service.NewsInfoListService;
 
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.error.WxErrorException;
 
 import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping({"/api","/api/v1"})
+@RequestMapping({"/huatuo/api","/huatuo/api/v1","/api","/api/v1"})
 public class HuatuoResource {
 
 
@@ -50,6 +67,12 @@ public class HuatuoResource {
 
     @Autowired
     private HealthReportOfHacnService healthReportOfHacnService;
+    
+    @Autowired
+    private NewsInfoListService newsInfoListService;
+    
+    @Autowired
+    private HuatuoNewsService huatuoNewsService;
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -124,5 +147,17 @@ public class HuatuoResource {
     @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
     public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
         return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
+    }
+
+    @PostMapping("/news-info/lists")
+    public NewsInfoListResponse newsInfoList(@RequestBody final NewsInfoListRequestBody newsInfoListRequestBody) {
+    	
+    	return newsInfoListService.getNewsInfoList(newsInfoListRequestBody);
+    }
+
+    @PostMapping("/important-news")
+    @ApiOperation(value = "important-news", notes = "important news and unread number", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
+        return huatuoNewsService.getImportantNewsList(newsNotReadReq);
     }
 }
