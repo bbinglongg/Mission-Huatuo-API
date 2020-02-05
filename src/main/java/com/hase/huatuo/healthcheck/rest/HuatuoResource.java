@@ -3,6 +3,8 @@ package com.hase.huatuo.healthcheck.rest;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,16 +20,19 @@ import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
 import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
 import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
 import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.request.StaffOfHacnNeedsPostBody;
 import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
 import com.hase.huatuo.healthcheck.model.request.VpnRequest;
 import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
 import com.hase.huatuo.healthcheck.model.response.AreaReport;
+import com.hase.huatuo.healthcheck.model.response.AreaReportForHacn;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
 import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
 import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
 import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
+import com.hase.huatuo.healthcheck.service.HealthReportOfHacnService;
 import com.hase.huatuo.healthcheck.service.HealthReportService;
 import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
 import com.hase.huatuo.healthcheck.service.HuatuoNewsService;
@@ -35,11 +40,10 @@ import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
 import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
 import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
 import com.hase.huatuo.healthcheck.service.NewsInfoListService;
+import com.hase.huatuo.healthcheck.service.StaffNeedsCollectionsOfHacnService;
 
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
-
-import javax.validation.Valid;
 
 
 @RestController
