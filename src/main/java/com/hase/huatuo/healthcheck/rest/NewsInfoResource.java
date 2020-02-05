@@ -19,7 +19,7 @@ import com.hase.huatuo.healthcheck.model.NewsInfo;
 import com.hase.huatuo.healthcheck.model.request.NewsDetailRequest;
 
 @RestController
-@RequestMapping({ "/api", "/api/v1" })
+@RequestMapping({"/huatuo/api","/huatuo/api/v1","/api","/api/v1"})
 public class NewsInfoResource {
 	@Autowired
 	private NewsInfoRepository newsInfo;

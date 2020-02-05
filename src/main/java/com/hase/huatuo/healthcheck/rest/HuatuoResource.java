@@ -41,7 +41,7 @@ import me.chanjar.weixin.common.error.WxErrorException;
 
 
 @RestController
-@RequestMapping({"/api","/api/v1"})
+@RequestMapping({"/huatuo/api","/huatuo/api/v1","/api","/api/v1"})
 public class HuatuoResource {
 
 
