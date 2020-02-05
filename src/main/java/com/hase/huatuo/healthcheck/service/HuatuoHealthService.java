@@ -6,6 +6,7 @@ import javax.persistence.PersistenceContext;
 import com.hase.huatuo.healthcheck.dao.LocationRepository;
 import com.hase.huatuo.healthcheck.dao.NotifyRepository;
 import com.hase.huatuo.healthcheck.model.Location;
+import com.hase.huatuo.healthcheck.utils.MailUtils;
 import com.hase.huatuo.healthcheck.utils.SMSUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
@@ -121,6 +122,17 @@ public class HuatuoHealthService {
 			if(locationOptional.isPresent()){
 				Location location = locationOptional.get();
 				SMSUtils.sendSMSHuaTuoReport(managerStaffMobileNumbersString, statusText, location.getCity(), location.getWorkplaceEnName());
+			}
+		}
+		List<String> managerStaffEmailAddress = notifyRepository.notifyStaffEmailAddress();
+		if (!CollectionUtils.isEmpty(managerStaffEmailAddress)) {
+			String[] toMail = managerStaffEmailAddress.toArray(new String[managerStaffEmailAddress.size()]);
+			String statusText = "1".equalsIgnoreCase(healthStatus)? "CONFIRM":"SUSPECT";
+			Optional<Location> locationOptional = locationRepository.findById(workplace);
+			if(locationOptional.isPresent()){
+				Location location = locationOptional.get();
+				String position = location.getCity()+" - "+location.getWorkplaceEnName();
+				MailUtils.sendNotifyEmail(toMail,statusText,position);
 			}
 		}
 	}

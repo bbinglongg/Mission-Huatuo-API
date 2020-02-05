@@ -9,4 +9,6 @@ import java.util.List;
 public interface NotifyRepository extends JpaRepository<Notify,String> {
     @Query(value = "select s.mobileNum from Notify n left join StaffListEntity s on n.staffId = s.staffId where s.mobileNum is not null and s.mobileNum <> '' and n.status = 1")
     List<String> notifyStaffMobileNumbers();
+    @Query(value = "select s.emailAddress from Notify n left join StaffListEntity s on n.staffId = s.staffId where s.emailAddress is not null and s.emailAddress <> '' and n.status = 1")
+    List<String> notifyStaffEmailAddress();
 }
