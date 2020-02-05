@@ -10,4 +10,6 @@ public class NewsDetailRequest {
     private String openId;
     @NotBlank
     private String newsId;
+    @NotBlank
+    private String staffId;
 }
