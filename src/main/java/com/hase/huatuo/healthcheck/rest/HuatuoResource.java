@@ -3,12 +3,6 @@ package com.hase.huatuo.healthcheck.rest;
 import java.text.ParseException;
 import java.util.List;
 
-import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.UserInfo;
-import com.hase.huatuo.healthcheck.model.request.*;
-import com.hase.huatuo.healthcheck.model.response.*;
-import com.hase.huatuo.healthcheck.service.*;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +12,31 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hase.huatuo.healthcheck.dao.entity.HealthInfoHacn;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
+import com.hase.huatuo.healthcheck.model.SMSInfo;
+import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnEnquiryBody;
+import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnPostBody;
+import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
+import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
+import com.hase.huatuo.healthcheck.model.request.VpnRequest;
+import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
+import com.hase.huatuo.healthcheck.model.response.AreaReport;
+import com.hase.huatuo.healthcheck.model.response.CommonResponse;
+import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
+import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
+import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
+import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
+import com.hase.huatuo.healthcheck.service.HealthReportService;
+import com.hase.huatuo.healthcheck.service.HuatuoHealthHacnService;
+import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
+import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
+import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
+import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
 
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.error.WxErrorException;
 
 
 @RestController
@@ -43,6 +59,10 @@ public class HuatuoResource {
     @Autowired
     private HuatuoWechatService huatuoWechatService;
 
+    @Autowired
+    private HuatuoHealthHacnService huatuoHealthhacnService;
+    
+    
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
     	validHealthRequest(healthPostBody);
@@ -105,5 +125,17 @@ public class HuatuoResource {
     @ApiOperation(value = "wechat-login", notes = "wechat login", httpMethod = "POST")
     public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
+    }
+    
+    
+    @PostMapping("/hacn/health/report")
+    public HealthPostResponse uploadHealthHacn(@RequestBody final HealthInfoHacnPostBody healthPostBody) {
+    	
+    	return huatuoHealthhacnService.uploadHealthHacn(healthPostBody);
+    }
+    
+    @PostMapping("/hacn/health/enquiry")
+    public HealthInfoHacn getHealthInfoHacn(@RequestBody final HealthInfoHacnEnquiryBody enquiryBody) {
+    	return huatuoHealthhacnService.getHealthInfoHacn(enquiryBody);
     }
 }
