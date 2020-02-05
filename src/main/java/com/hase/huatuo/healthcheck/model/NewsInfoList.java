@@ -2,7 +2,7 @@ package com.hase.huatuo.healthcheck.model;
 
 import java.io.Serializable;
 
-public class NewsInfos implements Serializable {
+public class NewsInfoList implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	

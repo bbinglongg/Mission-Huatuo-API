@@ -2,17 +2,17 @@ package com.hase.huatuo.healthcheck.model.response;
 
 import java.util.List;
 
-import com.hase.huatuo.healthcheck.dao.entity.NewsInfoEntity;
+import com.hase.huatuo.healthcheck.model.NewsInfoList;
 
 public class NewsInfoListResponse {
 	
-	private List<NewsInfoEntity> newsInfoList;
+	private List<NewsInfoList> newsInfoList;
 
-	public List<NewsInfoEntity> getNewsInfoList() {
+	public List<NewsInfoList> getNewsInfoList() {
 		return newsInfoList;
 	}
 
-	public void setNewsInfoList(List<NewsInfoEntity> newsInfoList) {
+	public void setNewsInfoList(List<NewsInfoList> newsInfoList) {
 		this.newsInfoList = newsInfoList;
 	}
 	
