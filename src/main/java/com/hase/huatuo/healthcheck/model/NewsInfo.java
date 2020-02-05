@@ -1,14 +1,17 @@
 package com.hase.huatuo.healthcheck.model;
 
-import lombok.Data;
-
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.*;
-import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Data;
 
 @Entity
 @Data
@@ -21,6 +24,8 @@ public class NewsInfo {
     private String title;
     @Column(columnDefinition="BLOB")
     private String  content;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone="GMT+8")
     @Column
     private Date date;
     @Column
