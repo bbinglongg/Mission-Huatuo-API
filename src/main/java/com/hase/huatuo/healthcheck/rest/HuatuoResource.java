@@ -39,6 +39,8 @@ import com.hase.huatuo.healthcheck.service.NewsInfoListService;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping({"/huatuo/api","/huatuo/api/v1","/api","/api/v1"})
@@ -61,6 +63,12 @@ public class HuatuoResource {
     private HuatuoWechatService huatuoWechatService;
 
     @Autowired
+    private StaffNeedsCollectionsOfHacnService needsCollectionsOfHacnService;
+
+    @Autowired
+    private HealthReportOfHacnService healthReportOfHacnService;
+    
+    @Autowired
     private NewsInfoListService newsInfoListService;
     
     @Autowired
@@ -76,6 +84,11 @@ public class HuatuoResource {
     @GetMapping("/health")
     public ResponseEntity<List<AreaReport>> requestHealth(@RequestHeader("X-IS-DUMMY") String isDummy) {
     	return healthReportService.enquiry(isDummy);
+    }
+
+    @GetMapping("/hacn/health")
+    public ResponseEntity<AreaReportForHacn> requestHealthOfHacn() {
+        return healthReportOfHacnService.enquiry();
     }
     
     @PostMapping("/vpn")
@@ -130,6 +143,12 @@ public class HuatuoResource {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
     }
 
+    @PostMapping("/hacn/needs-collection")
+    @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
+    public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
+        return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
+    }
+
     @PostMapping("/news-info/lists")
     public NewsInfoListResponse newsInfoList(@RequestBody final NewsInfoListRequestBody newsInfoListRequestBody) {
     	
@@ -141,5 +160,4 @@ public class HuatuoResource {
     public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
         return huatuoNewsService.getImportantNewsList(newsNotReadReq);
     }
-
 }
