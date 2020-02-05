@@ -38,20 +38,20 @@ public class HuatuoRegistrationService {
         if(smsInfo == null){
             System.out.println("mobile number have not send verify code: "+registrationPostBody.getMobileNum());
             response.setCode("-2");
-            response.setMsg("验证码错误或已失效");
+            response.setMsg("The verification code you entered is invalid or expired");
             return ResponseEntity.ok(response);
         }
         if(!registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) ||
                 (new Date().getTime() - smsInfo.getCreatetime() > 90 * 1000)){
             response.setCode("-2");
-            response.setMsg("验证码错误或已失效");
+            response.setMsg("The verification code you entered is invalid or expired");
             return ResponseEntity.ok(response);
         }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(),registrationPostBody.getStaffId());
         if(registerRecords.size() != 0){
-            System.out.println("输入的staff ID 已注册");
+            System.out.println("The staff ID entered is already registered, id= "+registrationPostBody.getAppId());
             response.setCode("-1");
-            response.setMsg("输入的staff ID 已注册");
+            response.setMsg("The staff ID you entered is already registered");
             return ResponseEntity.ok(response);
         }
         UserInfo userInfo = new UserInfo();
