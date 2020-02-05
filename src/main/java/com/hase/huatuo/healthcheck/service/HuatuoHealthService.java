@@ -126,13 +126,12 @@ public class HuatuoHealthService {
 		}
 		List<String> managerStaffEmailAddress = notifyRepository.notifyStaffEmailAddress();
 		if (!CollectionUtils.isEmpty(managerStaffEmailAddress)) {
-			String[] toMail = managerStaffEmailAddress.toArray(new String[managerStaffEmailAddress.size()]);
 			String statusText = "1".equalsIgnoreCase(healthStatus)? "CONFIRM":"SUSPECT";
 			Optional<Location> locationOptional = locationRepository.findById(workplace);
 			if(locationOptional.isPresent()){
 				Location location = locationOptional.get();
 				String position = location.getCity()+" - "+location.getWorkplaceEnName();
-				MailUtils.sendNotifyEmail(toMail,statusText,position);
+				MailUtils.sendNotifyEmail(managerStaffEmailAddress,statusText,position);
 			}
 		}
 	}
