@@ -128,6 +128,7 @@ public class HuatuoResource {
     }
     
     
+    
     @PostMapping("/hacn/health/report")
     public HealthPostResponse uploadHealthHacn(@RequestBody final HealthInfoHacnPostBody healthPostBody) {
     	
