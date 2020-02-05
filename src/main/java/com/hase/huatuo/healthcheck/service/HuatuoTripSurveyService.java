@@ -1,30 +1,15 @@
 package com.hase.huatuo.healthcheck.service;
 
-import com.hase.huatuo.healthcheck.dao.SMSInfoRepository;
-import com.hase.huatuo.healthcheck.dao.StaffListRepository;
 import com.hase.huatuo.healthcheck.dao.TripSurveyRepository;
-import com.hase.huatuo.healthcheck.dao.UserInfoRepository;
-import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
-import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.StaffList;
 import com.hase.huatuo.healthcheck.model.TripSurveyInfo;
-import com.hase.huatuo.healthcheck.model.UserInfo;
-import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
 import com.hase.huatuo.healthcheck.model.request.TripSurveyPostBody;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
-import com.hase.huatuo.healthcheck.utils.SMSUtils;
-import org.hibernate.id.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 @Service
 public class HuatuoTripSurveyService {
