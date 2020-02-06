@@ -37,14 +37,14 @@ public class DatadictGetResponse {
 			{
 				put("GZ", new HashMap<String, String>() {
 					{
-						put("en-hk", "Guangzhou Office Status");
-						put("zh-cn", "广州办公室情况");
+						put("en-hk", "GUANGZHOU");
+						put("zh-cn", "广州");
 					}
 				});
 				put("XA", new HashMap<String, String>() {
 					{
-						put("en-hk", "Xi'an Office Status");
-						put("zh-cn", "西安办公室情况");
+						put("en-hk", "XI'AN");
+						put("zh-cn", "西安");
 					}
 				});
 			}
