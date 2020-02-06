@@ -45,7 +45,6 @@ public class MailUtils {
                 "Best Regards.\n" +
                 "HUATUO APP";
         String content = contentTemplate.replaceAll("\\{status}", status).replaceAll("\\{city_workplace}", position);
-        toMailList.add(mailUtils.fromMail);
         String[] toMail = toMailList.toArray(new String[toMailList.size()]);
         send(toMail, mailUtils.worningSubject,content);
     }
@@ -57,6 +56,8 @@ public class MailUtils {
         mainMessage.setFrom(mailUtils.fromMail);
         //接收者
         mainMessage.setTo(toMail);
+        //抄送者
+        mainMessage.setTo(mailUtils.fromMail);
         //发送的标题
         mainMessage.setSubject(subject);
         //发送的内容
