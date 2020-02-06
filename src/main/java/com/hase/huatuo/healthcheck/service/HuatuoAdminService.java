@@ -59,13 +59,13 @@ public class HuatuoAdminService {
 			vpnReportQueryRequest.setInternetISP(String.valueOf(internetISP));
 		}
 		if (lastUpatetime != null && !"".equals(lastUpatetime)) {
-			vpnReportQueryRequest.setLastUpdatetime(String.valueOf(lastUpatetime+"%"));
+			vpnReportQueryRequest.setLastUpatetime(String.valueOf(lastUpatetime+"%"));
 		}
 
 		List<VpnInfo> vpnInfos = vpnInfoRepository.vpnReportView(vpnReportQueryRequest.getStaffId()
 				, vpnReportQueryRequest.getLocation(),
 				vpnReportQueryRequest.getInternetISP(),
-				vpnReportQueryRequest.getLastUpdatetime());
+				vpnReportQueryRequest.getLastUpatetime());
 		return vpnInfos;
 	}
 
