@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hase.huatuo.healthcheck.dao.entity.HealthInfoHacn;
 import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnEnquiryBody;
 import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnPostBody;
 import com.hase.huatuo.healthcheck.model.request.TripDetailReqBody;
@@ -19,6 +18,7 @@ import com.hase.huatuo.healthcheck.model.request.TripHistoryReqBody;
 import com.hase.huatuo.healthcheck.model.request.TripSurveyPostBody;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
+import com.hase.huatuo.healthcheck.model.response.HealthReportEnquirytResponse;
 import com.hase.huatuo.healthcheck.service.HuatuoHealthHacnService;
 import com.hase.huatuo.healthcheck.service.HuatuoTripDetailService;
 import com.hase.huatuo.healthcheck.service.HuatuoTripHistoryService;
@@ -70,7 +70,7 @@ public class HuatuoHacnResource {
     }
     
     @PostMapping("/health/enquiry")
-    public HealthInfoHacn getHealthInfoHacn(@RequestBody final HealthInfoHacnEnquiryBody enquiryBody) {
+    public HealthReportEnquirytResponse getHealthInfoHacn(@RequestBody final HealthInfoHacnEnquiryBody enquiryBody) {
     	return huatuoHealthhacnService.getHealthInfoHacn(enquiryBody);
     }
 }
