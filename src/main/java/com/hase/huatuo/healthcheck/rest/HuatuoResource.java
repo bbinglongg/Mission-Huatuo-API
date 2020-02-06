@@ -2,36 +2,19 @@ package com.hase.huatuo.healthcheck.rest;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hase.huatuo.healthcheck.model.VpnInfo;
+import com.hase.huatuo.healthcheck.model.request.*;
+import com.hase.huatuo.healthcheck.model.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
-import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
-import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
-import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
-import com.hase.huatuo.healthcheck.model.request.StaffOfHacnNeedsPostBody;
-import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
-import com.hase.huatuo.healthcheck.model.request.VpnRequest;
-import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
-import com.hase.huatuo.healthcheck.model.response.AreaReport;
-import com.hase.huatuo.healthcheck.model.response.AreaReportForHacn;
-import com.hase.huatuo.healthcheck.model.response.CommonResponse;
-import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
-import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
-import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
-import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
-import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
 import com.hase.huatuo.healthcheck.service.HealthReportOfHacnService;
 import com.hase.huatuo.healthcheck.service.HealthReportService;
 import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
@@ -102,10 +85,32 @@ public class HuatuoResource {
     	return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/vpn/report")
-    @ApiOperation(value = "vpnReport", notes = "Index VPN status report", httpMethod = "POST")
-    public ResponseEntity<VpnReportResponse> loadVPNStateDashboard(@RequestBody final VpnReportRequest vpnReportRequest) throws ParseException {
-        return ResponseEntity.ok(new VpnReportResponse(huatuoVPNService.loadVPNStateDashboard(vpnReportRequest)));
+    @GetMapping("/vpn/reportQuery")
+    @ApiOperation(value = "vpnReportView", notes = "Index VPN status report", httpMethod = "GET")
+    public ResponseEntity<VpnReportViewResponse> queryVPNReport(@RequestParam Map<String,Object> map) throws ParseException {
+        VpnReportQueryRequest vpnReportQueryRequest = new VpnReportQueryRequest();
+        Object staffId = map.get("staffId");
+        Object location = map.get("location");
+        Object internetISP = map.get("internetISP");
+        Object lastUpatetime = map.get("lastUpatetime");
+        if (staffId != null && !"".equals(staffId)) {
+            vpnReportQueryRequest.setStaffId(Integer.parseInt(String.valueOf(staffId)));
+        }
+        if (location != null && !"".equals(location)) {
+            vpnReportQueryRequest.setLocation("%"+String.valueOf(location)+"%");
+        }
+        if (internetISP != null && !"".equals(internetISP)) {
+            vpnReportQueryRequest.setInternetISP(String.valueOf(internetISP));
+        }
+        if (lastUpatetime != null && !"".equals(lastUpatetime)) {
+            vpnReportQueryRequest.setLastUpatetime(String.valueOf(lastUpatetime+"%"));
+        }
+        List<VpnInfo> vpnInfoList = huatuoVPNService.queryVPNReport(vpnReportQueryRequest);
+        VpnReportViewResponse response = new VpnReportViewResponse();
+        response.setItems(vpnInfoList);
+        response.setTotal(vpnInfoList.size());
+        response.setCode(20000);
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/datadict")
