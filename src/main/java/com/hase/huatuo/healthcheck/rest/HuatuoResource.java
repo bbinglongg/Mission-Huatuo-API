@@ -1,7 +1,9 @@
 package com.hase.huatuo.healthcheck.rest;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.UserInfo;
@@ -9,15 +11,11 @@ import com.hase.huatuo.healthcheck.model.VpnInfo;
 import com.hase.huatuo.healthcheck.model.request.*;
 import com.hase.huatuo.healthcheck.model.response.*;
 import com.hase.huatuo.healthcheck.service.*;
+import com.hase.huatuo.healthcheck.utils.DateUtils;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 
@@ -69,13 +67,31 @@ public class HuatuoResource {
         return ResponseEntity.ok(new VpnReportResponse(huatuoVPNService.loadVPNStateDashboard(vpnReportRequest)));
     }
 
-    @PostMapping("/vpn/reportQuery")
-    @ApiOperation(value = "vpnReportView", notes = "Index VPN status report", httpMethod = "POST")
-    public ResponseEntity<VpnReportViewResponse> queryVPNReport(@RequestBody final VpnReportQueryRequest vpnReportQueryRequest) throws ParseException {
+    @GetMapping("/vpn/reportQuery")
+    @ApiOperation(value = "vpnReportView", notes = "Index VPN status report", httpMethod = "GET")
+    public ResponseEntity<VpnReportViewResponse> queryVPNReport(@RequestParam Map<String,Object> map) throws ParseException {
+        VpnReportQueryRequest vpnReportQueryRequest = new VpnReportQueryRequest();
+        Object staffId = map.get("staffId");
+        Object location = map.get("location");
+        Object internetISP = map.get("internetISP");
+        Object lastUpatetime = map.get("lastUpatetime");
+        if (staffId != null && !"".equals(staffId)) {
+            vpnReportQueryRequest.setStaffId(Integer.parseInt(String.valueOf(staffId)));
+        }
+        if (location != null && !"".equals(location)) {
+            vpnReportQueryRequest.setLocation("%"+String.valueOf(location)+"%");
+        }
+        if (internetISP != null && !"".equals(internetISP)) {
+            vpnReportQueryRequest.setInternetISP(String.valueOf(internetISP));
+        }
+        if (lastUpatetime != null && !"".equals(lastUpatetime)) {
+            vpnReportQueryRequest.setLastUpatetime(String.valueOf(lastUpatetime+"%"));
+        }
         List<VpnInfo> vpnInfoList = huatuoVPNService.queryVPNReport(vpnReportQueryRequest);
         VpnReportViewResponse response = new VpnReportViewResponse();
         response.setItems(vpnInfoList);
         response.setTotal(vpnInfoList.size());
+        response.setCode(20000);
         return ResponseEntity.ok(response);
     }
     

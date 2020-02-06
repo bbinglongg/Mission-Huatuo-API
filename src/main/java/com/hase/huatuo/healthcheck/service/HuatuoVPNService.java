@@ -49,23 +49,22 @@ public class HuatuoVPNService {
 	}
 
 	public List<VpnInfo> queryVPNReport(VpnReportQueryRequest vpnReportQueryRequest) throws ParseException {
-		Date startTime = null;
-		Date endTime = null;
-		Date sourceLastUpdateTime = vpnReportQueryRequest.getLastUpatetime();
-		if (sourceLastUpdateTime !=null){
-			// so far the requirement, is to query the date which is SAME DAY from the requestDate
-			// but to reserve queries that are extended to a time range
-			// so I change the param for Time as a range
-			// that's why you see have startTime and endTime these two params
-			startTime = DateUtils.getDateWithoutTime(sourceLastUpdateTime);
-			endTime = DateUtils.getDateSetAsLastMoment(sourceLastUpdateTime);
-		}
+//		Date startTime = null;
+//		Date endTime = null;
+//		Date sourceLastUpdateTime = vpnReportQueryRequest.getLastUpatetime();
+//		if (sourceLastUpdateTime !=null){
+//			// so far the requirement, is to query the date which is SAME DAY from the requestDate
+//			// but to reserve queries that are extended to a time range
+//			// so I change the param for Time as a range
+//			// that's why you see have startTime and endTime these two params
+//			startTime = DateUtils.getDateWithoutTime(sourceLastUpdateTime);
+//			endTime = DateUtils.getDateSetAsLastMoment(sourceLastUpdateTime);
+//		}
 		List<VpnInfo> vpnInfoList = vpnInfoRepository.vpnReportView(
 				vpnReportQueryRequest.getStaffId(),
 				vpnReportQueryRequest.getLocation(),
 				vpnReportQueryRequest.getInternetISP(),
-				startTime,
-				endTime);
+				vpnReportQueryRequest.getLastUpatetime());
 		return vpnInfoList;
 	}
 }
