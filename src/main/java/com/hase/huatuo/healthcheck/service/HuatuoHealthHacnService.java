@@ -1,14 +1,13 @@
 package com.hase.huatuo.healthcheck.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.hase.huatuo.healthcheck.model.request.HealthDetailReqBody;
+import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -17,6 +16,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -184,6 +184,19 @@ public class HuatuoHealthHacnService {
     		ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "health status is null", null);
     	}
 
+	}
+
+	public ResponseEntity getHealthDetail(HealthDetailReqBody healthDetailReqBody) {
+		Optional<HealthInfoHacn> healthInfoHacn = healthInfoHacnRepository.findById(healthDetailReqBody.getSerailNumber());
+		CommonResponse result = new CommonResponse();
+		if (healthInfoHacn.isPresent()) {
+			result.setCode("200");
+			result.setMsg("success");
+			result.setReturnObject(healthInfoHacn.get());
+		} else {
+			ErrorHandleHelper.getInstance().throwBadRequestRestException("Buss_ERROR", "Record not found", healthDetailReqBody.getSerailNumber());
+		}
+		return ResponseEntity.ok(result);
 	}
 	
 }
