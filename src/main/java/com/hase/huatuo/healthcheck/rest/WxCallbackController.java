@@ -63,7 +63,6 @@ public class WxCallbackController {
                 inMessage = WxMaMessage.fromXml(requestBody);
             }
 
-//            this.route(inMessage, appid);
             return "success";
         }
 
@@ -76,20 +75,9 @@ public class WxCallbackController {
                 inMessage = WxMaMessage.fromEncryptedXml(requestBody, wxService.getWxMaConfig(),
                     timestamp, nonce, msgSignature);
             }
-
-//            this.route(inMessage, appid);
             return "success";
         }
 
         throw new RuntimeException("不可识别的加密类型：" + encryptType);
     }
-
-    private void route(WxMaMessage message, String appid) {
-        try {
-            WxMaConfiguration.getRouter(appid).route(message);
-        } catch (Exception e) {
-            this.logger.error(e.getMessage(), e);
-        }
-    }
-
 }

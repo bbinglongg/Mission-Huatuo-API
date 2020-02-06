@@ -57,7 +57,7 @@ public class MailUtils {
         //接收者
         mainMessage.setTo(toMail);
         //抄送者
-        mainMessage.setTo(mailUtils.fromMail);
+        mainMessage.setCc(mailUtils.fromMail);
         //发送的标题
         mainMessage.setSubject(subject);
         //发送的内容
