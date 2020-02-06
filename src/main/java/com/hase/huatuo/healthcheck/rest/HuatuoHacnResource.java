@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import javax.validation.Valid;
 
+import com.hase.huatuo.healthcheck.model.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnEnquiryBody;
-import com.hase.huatuo.healthcheck.model.request.HealthInfoHacnPostBody;
-import com.hase.huatuo.healthcheck.model.request.TripDetailReqBody;
-import com.hase.huatuo.healthcheck.model.request.TripHistoryReqBody;
-import com.hase.huatuo.healthcheck.model.request.TripSurveyPostBody;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthReportEnquirytResponse;
@@ -55,11 +51,10 @@ public class HuatuoHacnResource {
     public ResponseEntity getTripDetail(@Valid @RequestBody final TripDetailReqBody tripDetailReqBody) {
     	return huatuoTripDetailService.getTripDetail(tripDetailReqBody);
     }
-    
-    @PostMapping("/add_tripSurvey")
-    @ApiOperation(value = "add_tripSurvey", notes = "add tripSurvey", httpMethod = "POST")
+
+    @PostMapping("/trip/survey")
+    @ApiOperation(value = "hacn-trip-survey", notes = "hacn trip survey", httpMethod = "POST")
     public ResponseEntity<CommonResponse> addTripSurvey(@RequestBody final TripSurveyPostBody tripSurveyPostBody) throws ParseException {
-//        huatuoTripSurveyService.validAddTripSurveyRequest(registerBody);
         return huatuoTripSurveyService.addTripSurvey(tripSurveyPostBody);
     }
     
@@ -72,5 +67,11 @@ public class HuatuoHacnResource {
     @PostMapping("/health/enquiry")
     public HealthReportEnquirytResponse getHealthInfoHacn(@RequestBody final HealthInfoHacnEnquiryBody enquiryBody) {
     	return huatuoHealthhacnService.getHealthInfoHacn(enquiryBody);
+    }
+
+    @PostMapping("/health/detail")
+    @ApiOperation(value = "hacn-health-detail", notes = "hacn health detail", httpMethod = "POST")
+    public ResponseEntity getHealthDetail(@Valid @RequestBody final HealthDetailReqBody healthDetailReqBody) {
+        return huatuoHealthhacnService.getHealthDetail(healthDetailReqBody);
     }
 }
