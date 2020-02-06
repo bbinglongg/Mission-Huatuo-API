@@ -16,6 +16,7 @@ import org.hibernate.jpa.HibernateEntityManager;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,8 +133,8 @@ public class HuatuoHealthHacnService {
 			healthInfoHacn.setOpenId(enquiryBody.getOpenId());
 			
 			Example<HealthInfoHacn> example = Example.of(healthInfoHacn);
-			
-			List<HealthInfoHacn> list = healthInfoHacnRepository.findAll(example);
+			Sort sort = Sort.by(Sort.Direction.DESC, "reportDate");
+			List<HealthInfoHacn> list = healthInfoHacnRepository.findAll(example,sort);
 			if(list != null && list.size() > 0) {
 				List<HealthReportRecord> reportList = new ArrayList<HealthReportRecord>();
 				for(HealthInfoHacn item: list) {
