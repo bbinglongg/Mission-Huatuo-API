@@ -2,23 +2,15 @@ package com.hase.huatuo.healthcheck.common.config;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
-import cn.binarywang.wx.miniapp.bean.WxMaKefuMessage;
-import cn.binarywang.wx.miniapp.bean.WxMaTemplateData;
-import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
-import cn.binarywang.wx.miniapp.message.WxMaMessageHandler;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +20,6 @@ import java.util.stream.Collectors;
 public class WxMaConfiguration {
 
     private WxMaProperties properties;
-    private static Map<String, WxMaMessageRouter> routers = Maps.newHashMap();
     private static Map<String, WxMaService> maServices = Maps.newHashMap();
 
     @Autowired
@@ -64,30 +55,7 @@ public class WxMaConfiguration {
 
                 WxMaService service = new WxMaServiceImpl();
                 service.setWxMaConfig(config);
-//                routers.put(a.getAppid(), this.newRouter(service));
                 return service;
             }).collect(Collectors.toMap(s -> s.getWxMaConfig().getAppid(), a -> a));
     }
-
-    public static WxMaMessageRouter getRouter(String appid) {
-        return routers.get(appid);
-    }
-
-    private WxMaMessageRouter newRouter(WxMaService service) {
-        final WxMaMessageRouter router = new WxMaMessageRouter(service);
-        router
-                .rule().async(false).content("模板").handler(templateMsgHandler).end();
-        return router;
-    }
-
-    private final WxMaMessageHandler templateMsgHandler = (wxMessage, context, service, sessionManager) -> {
-        service.getMsgService().sendTemplateMsg(WxMaTemplateMessage.builder()
-                .templateId("此处更换为自己的模板id")
-                .formId("自己替换可用的formid")
-                .data(Lists.newArrayList(
-                        new WxMaTemplateData("keyword1", "339208499", "#173177")))
-                .toUser(wxMessage.getFromUser())
-                .build());
-        return null;
-    };
 }
