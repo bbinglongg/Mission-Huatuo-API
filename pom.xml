@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.hase.huatuo</groupId>
-    <artifactId>hase-huotuo-api</artifactId>
-    <version>1.3.3</version>
-    <name>hase-huotuo-api</name>
+    <artifactId>hase-huatuo-api</artifactId>
+    <version>1.3.4</version>
+    <name>hase-huatuo-api</name>
     <packaging>jar</packaging>
 
     <repositories>
