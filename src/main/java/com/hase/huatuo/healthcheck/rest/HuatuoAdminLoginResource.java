@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 
+@CrossOrigin
 @RestController
 @RequestMapping({"/huatuo-admin/api","/api"})
 @Slf4j
@@ -42,7 +43,7 @@ public class HuatuoAdminLoginResource {
 
         // 用户名和密码顺序一一对应
         String [] userArr = new String[]{"admin","test"};
-        String [] passArr = new String[]{"111111","222222"};
+        String [] passArr = new String[]{"111111","111111"};
 
         Boolean isLoginSucess = false;
         String username = map.get("username");
@@ -64,6 +65,7 @@ public class HuatuoAdminLoginResource {
         return isLoginSucess;
     }
 
+    @CrossOrigin
     @GetMapping("/user/info/{token}")
     @ApiOperation(value = "userInfo", notes = "login user", httpMethod = "GET")
     public ResponseEntity<AdminUserResponse> getUserInfo(@PathVariable String token) {

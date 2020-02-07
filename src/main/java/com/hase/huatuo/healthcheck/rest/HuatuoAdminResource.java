@@ -19,12 +19,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping({"/huatuo-admin/api"})
+@CrossOrigin
 public class HuatuoAdminResource {
 
     @Autowired
     private HuatuoAdminService huatuoAdminService;
 
 
+    @CrossOrigin
     @GetMapping("/vpn/reportQuery")
     @ApiOperation(value = "vpnReportView", notes = "Index VPN status report", httpMethod = "GET")
     public ResponseEntity<VpnReportViewResponse> queryVPNReport(@RequestParam Map<String,Object> map) {

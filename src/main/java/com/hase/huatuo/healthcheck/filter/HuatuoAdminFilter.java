@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Slf4j
 @Component
@@ -22,7 +23,8 @@ public class HuatuoAdminFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
             String token = req.getHeader("X-Token");
             String requestURI = req.getRequestURI();
-            if (requestURI.contains("/user/login") || (!"".equals(token) && TOKEN.equals(token))) {
+            if (requestURI.contains("/user/login") || "OPTIONS".equals(req.getMethod())
+                   || (!"".equals(token) && TOKEN.equals(token))) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 log.error("Invalid token");
