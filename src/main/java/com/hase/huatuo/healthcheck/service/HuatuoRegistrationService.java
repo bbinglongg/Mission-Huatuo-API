@@ -1,10 +1,12 @@
 package com.hase.huatuo.healthcheck.service;
 
 import java.security.SecureRandom;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
+import com.hase.huatuo.healthcheck.common.config.WxMaProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,16 @@ public class HuatuoRegistrationService {
     @Autowired
     private StaffListRepository staffListRepository;
 
+    private String hacnAppId = null;
+
+    private HuatuoRegistrationService (@Autowired WxMaProperties properties) {
+        this.hacnAppId = null;
+        Optional<WxMaProperties.Config> hacnAppIdConfigOptional = properties.getConfigs().stream().filter(config -> "hacn".equalsIgnoreCase(config.getAppName())).findFirst();
+        if (hacnAppIdConfigOptional.isPresent()) {
+            hacnAppId = hacnAppIdConfigOptional.get().getAppid();
+        }
+    }
+
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
         if ("1234".equals(registrationPostBody.getVerifyCode())
@@ -47,18 +59,20 @@ public class HuatuoRegistrationService {
             response.setMsg("success");
             return ResponseEntity.ok(response);
         }
-        SMSInfo smsInfo = smsInfoRepository.findById(registrationPostBody.getMobileNum()).orElse(null);
-        if (smsInfo == null) {
-            System.out.println("mobile number have not send verify code: " + registrationPostBody.getMobileNum());
-            response.setCode("-2");
-            response.setMsg("The verification code you entered is invalid or expired");
-            return ResponseEntity.ok(response);
-        }
-        if (!registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) ||
-                (new Date().getTime() - smsInfo.getCreatetime() > 90 * 1000)) {
-            response.setCode("-2");
-            response.setMsg("The verification code you entered is invalid or expired");
-            return ResponseEntity.ok(response);
+        if (!StringUtils.equals(registrationPostBody.getAppId(), this.hacnAppId)) {
+            SMSInfo smsInfo = smsInfoRepository.findById(registrationPostBody.getMobileNum()).orElse(null);
+            if (smsInfo == null) {
+                System.out.println("mobile number have not send verify code: " + registrationPostBody.getMobileNum());
+                response.setCode("-2");
+                response.setMsg("The verification code you entered is invalid or expired");
+                return ResponseEntity.ok(response);
+            }
+            if (!registrationPostBody.getVerifyCode().equals(smsInfo.getVerifyCode()) ||
+                    (System.currentTimeMillis() - smsInfo.getCreatetime() > 90 * 1000)) {
+                response.setCode("-2");
+                response.setMsg("The verification code you entered is invalid or expired");
+                return ResponseEntity.ok(response);
+            }
         }
         List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(), registrationPostBody.getStaffId());
         if (registerRecords.size() != 0) {
@@ -96,7 +110,7 @@ public class HuatuoRegistrationService {
         }
         String verifyCode = String.valueOf(new SecureRandom().nextInt(8999) + 1000);
         smsInfo.setVerifyCode(verifyCode);
-        smsInfo.setCreatetime(new Date().getTime());
+        smsInfo.setCreatetime(System.currentTimeMillis());
         smsInfoRepository.saveAndFlush(smsInfo);
         System.out.println("SMS verify code " + verifyCode);
         boolean res = SMSUtils.sendSMSVerifyCode(smsInfo.getMobileNum(), verifyCode);
@@ -123,30 +137,35 @@ public class HuatuoRegistrationService {
         if (appId == null) {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "appId is null", null);
         }
-        String verifyCode = registrationPostBody.getVerifyCode();
-        if (verifyCode == null) {
-            ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "verifyCode is null", null);
-        }
         String openId = registrationPostBody.getOpenId();
         if (openId == null) {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "openId is null", null);
         }
-        String mobileNum = registrationPostBody.getMobileNum();
-        if (mobileNum == null) {
-            ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "mobileNum is null", null);
-        }
-
-        if (!ifStaffInWhiteList(registrationPostBody.getStaffId(), registrationPostBody.getMobileNum())) {
-            ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
+        if (!StringUtils.equals(appId, this.hacnAppId)) {
+            String verifyCode = registrationPostBody.getVerifyCode();
+            if (verifyCode == null) {
+                ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "verifyCode is null", null);
+            }
+            String mobileNum = registrationPostBody.getMobileNum();
+            if (mobileNum == null) {
+                ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "mobileNum is null", null);
+            }
+            if (!ifStaffMobileNumInWhiteList(registrationPostBody.getStaffId(), registrationPostBody.getMobileNum())) {
+                ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
+            }
+        } else {
+            if (!ifStaffInWhiteList(registrationPostBody.getStaffId())) {
+                ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
+            }
         }
     }
 
     private boolean checkBeforeSendSMS(String mobileNumber) {
         SMSInfo res = smsInfoRepository.findById(mobileNumber).orElse(null);
-        return res == null || (new Date().getTime() - res.getCreatetime() > 60 * 1000);
+        return res == null || (System.currentTimeMillis() - res.getCreatetime() > 60 * 1000);
     }
 
-    public boolean ifStaffInWhiteList(String staffId, String mobileNum) {
+    public boolean ifStaffMobileNumInWhiteList(String staffId, String mobileNum) {
         try {
             StaffListEntity staffList = staffListRepository.findById(staffId).orElse(null);
             if (staffList != null) {
@@ -157,6 +176,14 @@ public class HuatuoRegistrationService {
             }
         } catch (Exception e) {
 
+        }
+        return false;
+    }
+
+    public boolean ifStaffInWhiteList(String staffId) {
+        StaffListEntity staffList = staffListRepository.findById(staffId).orElse(null);
+        if (staffList != null) {
+            return true;
         }
         return false;
     }
