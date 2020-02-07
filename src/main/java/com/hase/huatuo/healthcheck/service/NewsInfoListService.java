@@ -25,9 +25,9 @@ public class NewsInfoListService {
 		NewsInfoListResponse newsInfoListResponse = new NewsInfoListResponse();
 		
 		try {
-			String sql ="select n.id, n.title, n.priority, DATE_FORMAT(n.date,'%Y-%m-%d %H:%i') as date, n.source, i.a from news_info n left join (select i.item_id, 'Y' a from item_status i, user_info u where i.staff_id=u.staff_id and u.open_id='" 
+			String sql ="select n.id, n.title, n.priority, DATE_FORMAT(n.date,'%Y-%m-%d %H:%i') as date, n.source, i.a from news_info n left join (select i.news_id, 'Y' a from news_info_read_record i, user_info u where i.staff_id=u.staff_id and u.open_id='"
 			+ newsInfoListRequestBody.getOpenId() 
-			+ "' and i.item_type='news') i on i.item_id=n.id where n.enable='Y' order by priority DESC,date DESC";
+			+ "' and i.app_id='"+newsInfoListRequestBody.getAppId()+"') i on i.news_id=n.id where n.enable='Y' and n.app_id='"+newsInfoListRequestBody.getAppId()+"' order by priority DESC,date DESC";
 			
 //			Query query = entityManager.createNativeQuery(sql, NewsInfoEntity.class);  
 //			List<NewsInfoEntity> rows = query.getResultList(); 

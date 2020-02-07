@@ -24,9 +24,9 @@ public class NewsInfoResource {
 	@Autowired
 	private NewsInfoRepository newsInfo;
 
-	public static final String HEALTH_STATISTIC_SQL = "select count(1) from item_status where staff_id=? and item_id=? and item_type='news'";
+	public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info_read_record where staff_id=? and news_id=? and app_id=?";
 
-	public static final String HEALTH_UPDATE_SQL = "insert into item_status values (?, ?, ?)";
+	public static final String HEALTH_UPDATE_SQL = "insert into news_info_read_record values (?, ?, ?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -38,6 +38,7 @@ public class NewsInfoResource {
 	public ResponseEntity<String> upDateNewsInfo(@RequestBody @Valid NewsDetailRequest detail) {
 		final String newsId = detail.getNewsId();
 		final String openId = detail.getOpenId();
+		final String appId = detail.getAppId();
 
 //        
 //        
@@ -51,11 +52,11 @@ public class NewsInfoResource {
 //       }
 
 		int num = jdbcTemplate.queryForObject(HEALTH_STATISTIC_SQL,
-				new Object[] { detail.getStaffId(), detail.getNewsId() }, Integer.class);
+				new Object[] { detail.getStaffId(), detail.getNewsId(),appId }, Integer.class);
 
 		if (num < 1) {
 			int result = jdbcTemplate.update(HEALTH_UPDATE_SQL,
-					new Object[] { detail.getStaffId(), detail.getNewsId(), "news" });
+					new Object[] { appId,detail.getStaffId(), detail.getNewsId() });
 			
 		}
 
