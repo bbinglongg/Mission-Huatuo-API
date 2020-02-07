@@ -43,11 +43,11 @@ public class HuatuoHealthHacnService {
 		validation(body);
 		
 		HealthPostResponse response = new HealthPostResponse();
-		
-		if(checkRecordExsit(body)) {
-			ErrorHandleHelper.getInstance().throwTechnicalRestException("server error", "you had reported today.", null);
-		}
-		
+//
+//		if(checkRecordExsit(body)) {
+//			ErrorHandleHelper.getInstance().throwTechnicalRestException("server error", "you had reported today.", null);
+//		}
+//
 		updateHealthInfoStatistic(body);
 		
 		try {
