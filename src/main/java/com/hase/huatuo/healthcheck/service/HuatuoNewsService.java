@@ -25,12 +25,12 @@ public class HuatuoNewsService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info where enable='Y' and id not in (select i.item_id from item_status i, user_info u where i.staff_id=u.staff_Id and u.open_id=? and i.item_type='news')";
+    public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info where enable='Y' and app_id =? and id not in (select i.news_id from news_info_read_record i, user_info u where i.staff_id=u.staff_Id and u.open_id=? and i.app_id=?)";
 
     public ResponseEntity<CommonResponse> getImportantNewsList(final NewsNotReadRequest newsNotReadRequest){
         CommonResponse commonResponse = new CommonResponse();
         List<ImportantNewsResponse>  importantNewsResponseList = new ArrayList<>();
-        List<NewsInfo> importantNewsList = newsInfoRepository.getImportantNewsList();
+        List<NewsInfo> importantNewsList = newsInfoRepository.getImportantNewsList(newsNotReadRequest.getAppId());
 
         if(!CollectionUtils.isEmpty(importantNewsList)){
             importantNewsList.forEach(newsInfo -> {
@@ -54,7 +54,7 @@ public class HuatuoNewsService {
     	
     	System.out.println("openId:"+newsNotReadRequest.getOpenId());
         
-        int num = jdbcTemplate.queryForObject(HEALTH_STATISTIC_SQL, new Object[]{newsNotReadRequest.getOpenId()}, Integer.class);
+        int num = jdbcTemplate.queryForObject(HEALTH_STATISTIC_SQL, new Object[]{newsNotReadRequest.getAppId(),newsNotReadRequest.getOpenId(),newsNotReadRequest.getAppId()}, Integer.class);
 
         return num;
     }

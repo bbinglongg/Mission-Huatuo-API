@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface NewsInfoRepository extends JpaRepository<NewsInfo, String> {
     NewsInfo getNewsInfoByIdEquals(Long  newsId);
-    @Query(nativeQuery = true,value = "SELECT ni.* FROM news_info ni WHERE ni.enable='Y' AND ni.priority=1 ORDER BY ni.date DESC LIMIT 0,5")
-    List<NewsInfo> getImportantNewsList();
+    @Query(nativeQuery = true,value = "SELECT ni.* FROM news_info ni WHERE ni.enable='Y' AND ni.priority=1 AND ni.app_id=?1 ORDER BY ni.date DESC LIMIT 0,5")
+    List<NewsInfo> getImportantNewsList(String appId);
 }
