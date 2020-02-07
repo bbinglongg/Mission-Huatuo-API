@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableConfigurationProperties(WxMaProperties.class)
 public class WxMaConfiguration {
-    private WxMaProperties properties;
 
+    private WxMaProperties properties;
     private static Map<String, WxMaService> maServices = Maps.newHashMap();
 
     @Autowired

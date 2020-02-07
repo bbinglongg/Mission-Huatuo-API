@@ -4,8 +4,8 @@ wx:
         #haseIT
       - appid: wx9812117be87d24d2
         secret: d86b70d7565f479efabc98b12434f679
-        token:
-        aesKey:
+        token: hase@1234
+        aesKey: Ir3H4X9yrRbOZjpudorc2yGYsAaseQauuVEe5UtkGP9
         msgDataFormat: JSON
         #hacn
       - appid: wxf60257610325b729
