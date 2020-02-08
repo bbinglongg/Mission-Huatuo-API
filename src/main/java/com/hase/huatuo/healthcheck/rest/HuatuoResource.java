@@ -4,9 +4,34 @@ import com.hase.huatuo.healthcheck.dao.DonationRepository;
 import com.hase.huatuo.healthcheck.dao.entity.Donation;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.request.*;
-import com.hase.huatuo.healthcheck.model.response.*;
-import com.hase.huatuo.healthcheck.service.*;
+import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
+import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
+import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
+import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
+import com.hase.huatuo.healthcheck.model.request.StaffOfHacnNeedsPostBody;
+import com.hase.huatuo.healthcheck.model.request.SurveyFormReq;
+import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
+import com.hase.huatuo.healthcheck.model.request.VpnRequest;
+import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
+import com.hase.huatuo.healthcheck.model.response.AreaReport;
+import com.hase.huatuo.healthcheck.model.response.AreaReportForHacn;
+import com.hase.huatuo.healthcheck.model.response.CommonResponse;
+import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
+import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
+import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
+import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
+import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
+import com.hase.huatuo.healthcheck.service.HealthReportOfHacnService;
+import com.hase.huatuo.healthcheck.service.HealthReportService;
+import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
+import com.hase.huatuo.healthcheck.service.HuatuoNewsService;
+import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
+import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
+import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
+import com.hase.huatuo.healthcheck.service.NewsInfoListService;
+import com.hase.huatuo.healthcheck.service.StaffNeedsCollectionsOfHacnService;
+import com.hase.huatuo.healthcheck.service.SurveyFormService;
+
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.BeanUtils;
@@ -50,8 +75,13 @@ public class HuatuoResource {
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
+
     @Autowired
     private DonationRepository donationRepository;
+    
+    @Autowired
+    private SurveyFormService surveyFormService;
+
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -150,5 +180,13 @@ public class HuatuoResource {
     @ApiOperation(value = "important-news", notes = "important news and unread number", httpMethod = "POST")
     public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
         return huatuoNewsService.getImportantNewsList(newsNotReadReq);
+    }
+    
+    @PostMapping("/survey/form")
+    @ApiOperation(value = "survey form", notes = "get survey form structure", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> getSurveryForm(@RequestBody final SurveyFormReq surveyFormReq) throws WxErrorException {
+    	
+        return surveyFormService.getForm(surveyFormReq);
+//    	return null;
     }
 }
