@@ -13,16 +13,7 @@ import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
 import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
 import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
 import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
-import com.hase.huatuo.healthcheck.service.HealthReportOfHacnService;
-import com.hase.huatuo.healthcheck.service.HealthReportService;
-import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
-import com.hase.huatuo.healthcheck.service.HuatuoNewsService;
-import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
-import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
-import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
-import com.hase.huatuo.healthcheck.service.NewsInfoListService;
-import com.hase.huatuo.healthcheck.service.StaffNeedsCollectionsOfHacnService;
-import com.hase.huatuo.healthcheck.service.SurveyFormService;
+import com.hase.huatuo.healthcheck.service.*;
 
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -73,6 +64,9 @@ public class HuatuoResource {
     
     @Autowired
     private SurveyFormService surveyFormService;
+
+    @Autowired
+    private HuatuoSurveyFormService huatuoSurveyFormService;
 
 
     @PostMapping("/health")
@@ -180,5 +174,17 @@ public class HuatuoResource {
     	
         return surveyFormService.getForm(surveyFormReq);
 //    	return null;
+    }
+
+    @PostMapping("/surveyform/lists")
+    @ApiOperation(value = "surveyform_lists", notes = "surveyform lists", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> getSurveyFormList(@RequestBody @Valid final SurveyFormListRequestBody surveyFormListRequestBody) throws WxErrorException {
+        return huatuoSurveyFormService.getSurveyFormList(surveyFormListRequestBody);
+    }
+
+    @PostMapping("/surveyform/detail")
+    @ApiOperation(value = "surveyform_detail", notes = "surveyform detail", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> getSurveyFormDetail(@RequestBody @Valid final SurveyFormDetailRequestBody surveyFormDetailRequestBody) throws WxErrorException {
+        return huatuoSurveyFormService.getSurveyFormDetail(surveyFormDetailRequestBody);
     }
 }
