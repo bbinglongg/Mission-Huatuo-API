@@ -13,6 +13,9 @@ import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,7 +46,8 @@ public class HuatuoTripSurveyService {
         if(tripSurveyPostBody == null ) {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "request body is null", null);
         }
-
+        List<String> ignoreList = new ArrayList<String>(Arrays.asList(new String[]{"familyContact","familyCondition",
+                "transitNo","transitDate","transitCity","transitHuBei","transitCityOfHuBei"}));
         Class clazz = (Class)tripSurveyPostBody.getClass();
         Field fields[] = clazz.getDeclaredFields();
         for(Field field : fields){
@@ -52,6 +56,9 @@ public class HuatuoTripSurveyService {
             try {
                 fieldValue = field.get(tripSurveyPostBody);
                 String fieldName = field.getName();
+                if(ignoreList.contains(fieldName)){
+                    continue;
+                }
                 if(ObjectUtils.isEmpty(fieldValue)){
                     ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", fieldName +" is error", null);
                 }

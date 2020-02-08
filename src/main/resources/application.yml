@@ -2,13 +2,15 @@ wx:
   miniapp:
     configs:
         #haseIT
-      - appid: wx9812117be87d24d2
+      - appName: haseIT
+        appid: wx9812117be87d24d2
         secret: d86b70d7565f479efabc98b12434f679
         token: hase@1234
         aesKey: Ir3H4X9yrRbOZjpudorc2yGYsAaseQauuVEe5UtkGP9
         msgDataFormat: JSON
         #hacn
-      - appid: wxf60257610325b729
+      - appName: hacn
+        appid: wxf60257610325b729
         secret: 982860fa2a00708062119fd49983e9be
         token:
         aesKey:

@@ -2,6 +2,7 @@ package com.hase.huatuo.healthcheck.rest;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,9 @@ public class NewsInfoResource {
 	@Autowired
 	private NewsInfoRepository newsInfo;
 
-	public static final String HEALTH_STATISTIC_SQL = "select count(1) from item_status where staff_id=? and item_id=? and item_type='news'";
+	public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info_read_record where staff_id=? and news_id=? and app_id=?";
 
-	public static final String HEALTH_UPDATE_SQL = "insert into item_status values (?, ?, ?)";
+	public static final String HEALTH_UPDATE_SQL = "insert into news_info_read_record values (?, ?, ?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -36,8 +37,12 @@ public class NewsInfoResource {
 	
 	@PostMapping(path = "/news/detail")
 	public ResponseEntity<String> upDateNewsInfo(@RequestBody @Valid NewsDetailRequest detail) {
+		if(StringUtils.isEmpty(detail.getAppId())){
+			detail.setAppId("wx9812117be87d24d2");
+		}
 		final String newsId = detail.getNewsId();
 		final String openId = detail.getOpenId();
+		final String appId = detail.getAppId();
 
 //        
 //        
@@ -51,11 +56,11 @@ public class NewsInfoResource {
 //       }
 
 		int num = jdbcTemplate.queryForObject(HEALTH_STATISTIC_SQL,
-				new Object[] { detail.getStaffId(), detail.getNewsId() }, Integer.class);
+				new Object[] { detail.getStaffId(), detail.getNewsId(),appId }, Integer.class);
 
 		if (num < 1) {
 			int result = jdbcTemplate.update(HEALTH_UPDATE_SQL,
-					new Object[] { detail.getStaffId(), detail.getNewsId(), "news" });
+					new Object[] { appId,detail.getStaffId(), detail.getNewsId() });
 			
 		}
 

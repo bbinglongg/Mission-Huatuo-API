@@ -14,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class TripSurveyPostBody {
 
     private String staffId;
+    private String staffName;
     private String mobileNumber;
     private String location;
     private String temperature;

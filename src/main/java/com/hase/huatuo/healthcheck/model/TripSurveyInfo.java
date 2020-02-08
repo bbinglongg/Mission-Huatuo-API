@@ -23,6 +23,8 @@ public class TripSurveyInfo {
     private String serailNumber;
     @Column(name = "staff_id")
     private String staffId;
+    @Column(name = "staff_name")
+    private String staffName;
     @Column(name = "mobile_number")
     private String mobileNumber;
     @Column(name = "location")

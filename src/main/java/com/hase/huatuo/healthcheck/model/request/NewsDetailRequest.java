@@ -6,10 +6,13 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class NewsDetailRequest {
+
     @NotBlank
     private String openId;
     @NotBlank
     private String newsId;
     @NotBlank
     private String staffId;
+    private String appId;
 }
+

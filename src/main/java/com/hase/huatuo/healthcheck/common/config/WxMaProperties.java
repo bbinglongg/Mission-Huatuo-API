@@ -19,6 +19,11 @@ public class WxMaProperties {
         /**
          * 设置微信小程序的appid
          */
+        private String appName;
+
+        /**
+         * 设置微信小程序的appid
+         */
         private String appid;
 
         /**
