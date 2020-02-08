@@ -3,6 +3,7 @@ package com.hase.huatuo.healthcheck.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,9 @@ public class HuatuoNewsService {
     public static final String HEALTH_STATISTIC_SQL = "select count(1) from news_info where enable='Y' and app_id =? and id not in (select i.news_id from news_info_read_record i, user_info u where i.staff_id=u.staff_Id and u.open_id=? and i.app_id=?)";
 
     public ResponseEntity<CommonResponse> getImportantNewsList(final NewsNotReadRequest newsNotReadRequest){
+        if(StringUtils.isEmpty(newsNotReadRequest.getAppId())){
+            newsNotReadRequest.setAppId("wx9812117be87d24d2");
+        }
         CommonResponse commonResponse = new CommonResponse();
         List<ImportantNewsResponse>  importantNewsResponseList = new ArrayList<>();
         List<NewsInfo> importantNewsList = newsInfoRepository.getImportantNewsList(newsNotReadRequest.getAppId());
