@@ -1,19 +1,7 @@
 package com.hase.huatuo.healthcheck.rest;
 
-import java.text.ParseException;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.hase.huatuo.healthcheck.dao.DonationRepository;
+import com.hase.huatuo.healthcheck.dao.entity.Donation;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
@@ -46,6 +34,14 @@ import com.hase.huatuo.healthcheck.service.SurveyFormService;
 
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.util.List;
 
 
 @RestController
@@ -79,9 +75,13 @@ public class HuatuoResource {
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
+
+    @Autowired
+    private DonationRepository donationRepository;
     
     @Autowired
     private SurveyFormService surveyFormService;
+
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -156,6 +156,18 @@ public class HuatuoResource {
     @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
     public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
         return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
+    }
+
+    @PostMapping("/hacn/donation")
+    @ApiOperation(value = "hacn-donation", notes = "hacn staff needs donation", httpMethod = "POST")
+    public ResponseEntity hacnStaffDonation(@Valid @RequestBody DonationRequest donationRequest){
+        Donation donation = new Donation();
+        BeanUtils.copyProperties(donationRequest,donation);
+        donationRepository.save(donation);
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setCode("200");
+        commonResponse.setMsg("Success");
+        return  ResponseEntity.ok(commonResponse);
     }
 
     @PostMapping("/news-info/lists")
