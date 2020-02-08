@@ -13,7 +13,6 @@ public class NewsDetailRequest {
     private String newsId;
     @NotBlank
     private String staffId;
-    @NotBlank
     private String appId;
 }
 
