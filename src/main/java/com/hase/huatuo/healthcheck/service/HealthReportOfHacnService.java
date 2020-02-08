@@ -43,7 +43,7 @@ public class HealthReportOfHacnService {
 
     private static final String HEALTH_SUMMARY_BY_CITY = "SELECT c.city_short_name as cityShortName,h.health_status as healthStatus,AVG(c.onlyHasSubBranch) AS isSubBranch, SUM(IF(h.staff_id IS NULL, 0, 1)) AS total FROM cities c LEFT JOIN health_info_hacn h on c.city_short_name = h.city_short_name WHERE h.is_statistic= '1' OR h.is_statistic IS NULL GROUP BY c.city_short_name, h.health_status ORDER BY null";
 
-    private static final String HEALTH_SUMMARY_BY_ISOLATION_TYPE = "SELECT i.isolation_type AS isolationType, SUM(if(h.staff_id IS NULL, 0, 1)) AS total FROM isolation_type_hacn i LEFT JOIN health_info_hacn h ON i.isolation_type = h.isolation_type WHERE (h.is_statistic IS NULL OR h.is_statistic = '1') AND (h.is_isolation IS NULL OR h.is_isolation = '1') GROUP BY i.isolation_type";
+    private static final String HEALTH_SUMMARY_BY_ISOLATION_TYPE = "SELECT i.isolation_type AS isolationType, SUM(if(h.staff_id IS NULL, 0, 1)) AS total FROM isolation_type_hacn i LEFT JOIN health_info_hacn h ON i.isolation_type = h.isolation_type WHERE (h.is_statistic IS NULL OR h.is_statistic = '1') AND (h.is_isolation IS NULL OR h.is_isolation = 'Y') GROUP BY i.isolation_type";
 
     public ResponseEntity<AreaReportForHacn> enquiry(){
         AreaReportForHacn areaReportForHacn = new AreaReportForHacn();
