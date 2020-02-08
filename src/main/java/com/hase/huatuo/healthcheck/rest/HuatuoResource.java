@@ -21,6 +21,7 @@ import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
 import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
 import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
 import com.hase.huatuo.healthcheck.model.request.StaffOfHacnNeedsPostBody;
+import com.hase.huatuo.healthcheck.model.request.SurveyFormReq;
 import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
 import com.hase.huatuo.healthcheck.model.request.VpnRequest;
 import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
@@ -41,6 +42,7 @@ import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
 import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
 import com.hase.huatuo.healthcheck.service.NewsInfoListService;
 import com.hase.huatuo.healthcheck.service.StaffNeedsCollectionsOfHacnService;
+import com.hase.huatuo.healthcheck.service.SurveyFormService;
 
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -77,6 +79,9 @@ public class HuatuoResource {
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
+    
+    @Autowired
+    private SurveyFormService surveyFormService;
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -163,5 +168,13 @@ public class HuatuoResource {
     @ApiOperation(value = "important-news", notes = "important news and unread number", httpMethod = "POST")
     public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
         return huatuoNewsService.getImportantNewsList(newsNotReadReq);
+    }
+    
+    @PostMapping("/survey/form")
+    @ApiOperation(value = "survey form", notes = "get survey form structure", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> getSurveryForm(@RequestBody final SurveyFormReq surveyFormReq) throws WxErrorException {
+    	
+        return surveyFormService.getForm(surveyFormReq);
+//    	return null;
     }
 }
