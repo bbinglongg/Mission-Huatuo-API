@@ -1,49 +1,22 @@
 package com.hase.huatuo.healthcheck.rest;
 
-import java.text.ParseException;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.hase.huatuo.healthcheck.dao.DonationRepository;
+import com.hase.huatuo.healthcheck.dao.entity.Donation;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
-import com.hase.huatuo.healthcheck.model.request.HealthPostBody;
-import com.hase.huatuo.healthcheck.model.request.NewsInfoListRequestBody;
-import com.hase.huatuo.healthcheck.model.request.NewsNotReadRequest;
-import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
-import com.hase.huatuo.healthcheck.model.request.StaffOfHacnNeedsPostBody;
-import com.hase.huatuo.healthcheck.model.request.VpnReportRequest;
-import com.hase.huatuo.healthcheck.model.request.VpnRequest;
-import com.hase.huatuo.healthcheck.model.request.WechatLoginRequest;
-import com.hase.huatuo.healthcheck.model.response.AreaReport;
-import com.hase.huatuo.healthcheck.model.response.AreaReportForHacn;
-import com.hase.huatuo.healthcheck.model.response.CommonResponse;
-import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
-import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
-import com.hase.huatuo.healthcheck.model.response.NewsInfoListResponse;
-import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
-import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
-import com.hase.huatuo.healthcheck.service.HealthReportOfHacnService;
-import com.hase.huatuo.healthcheck.service.HealthReportService;
-import com.hase.huatuo.healthcheck.service.HuatuoHealthService;
-import com.hase.huatuo.healthcheck.service.HuatuoNewsService;
-import com.hase.huatuo.healthcheck.service.HuatuoRegistrationService;
-import com.hase.huatuo.healthcheck.service.HuatuoVPNService;
-import com.hase.huatuo.healthcheck.service.HuatuoWechatService;
-import com.hase.huatuo.healthcheck.service.NewsInfoListService;
-import com.hase.huatuo.healthcheck.service.StaffNeedsCollectionsOfHacnService;
-
+import com.hase.huatuo.healthcheck.model.request.*;
+import com.hase.huatuo.healthcheck.model.response.*;
+import com.hase.huatuo.healthcheck.service.*;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.util.List;
 
 
 @RestController
@@ -77,6 +50,8 @@ public class HuatuoResource {
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
+    @Autowired
+    private DonationRepository donationRepository;
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -151,6 +126,18 @@ public class HuatuoResource {
     @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
     public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
         return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
+    }
+
+    @PostMapping("/hacn/donation")
+    @ApiOperation(value = "hacn-donation", notes = "hacn staff needs donation", httpMethod = "POST")
+    public ResponseEntity hacnStaffDonation(@Valid @RequestBody DonationRequest donationRequest){
+        Donation donation = new Donation();
+        BeanUtils.copyProperties(donationRequest,donation);
+        donationRepository.save(donation);
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setCode("200");
+        commonResponse.setMsg("Success");
+        return  ResponseEntity.ok(commonResponse);
     }
 
     @PostMapping("/news-info/lists")
