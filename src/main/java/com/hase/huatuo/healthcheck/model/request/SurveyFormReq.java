@@ -1,8 +1,11 @@
 package com.hase.huatuo.healthcheck.model.request;
 
+import javax.validation.constraints.NotBlank;
+
 public class SurveyFormReq {
-	
+	@NotBlank
 	private long formId;
+	@NotBlank
 	private String appId;
 	private String staffId;
 	public String getAppId() {

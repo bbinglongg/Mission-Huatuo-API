@@ -16,6 +16,7 @@ import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SurveyFormAnswer;
 import com.hase.huatuo.healthcheck.model.SurveyFormQuestion;
 import com.hase.huatuo.healthcheck.model.request.SurveyFormReq;
+import com.hase.huatuo.healthcheck.model.request.SurveyFormSubmitReq;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 
 @Service
@@ -32,13 +33,44 @@ public class SurveyFormService {
         
     	CommonResponse commonResponse = new CommonResponse();
     	
-	    	RowMapper<SurveyFormQuestion> surveyFormQuestions = BeanPropertyRowMapper.newInstance(SurveyFormQuestion.class);
-	    	List<SurveyFormQuestion> questionList = getFormStructure(surveyFormReq.getFormId(), surveyFormReq.getAppId());
-	        commonResponse.setCode("200");
-	        commonResponse.setMsg("success");
-	        commonResponse.setReturnObject(questionList);
+    	RowMapper<SurveyFormQuestion> surveyFormQuestions = BeanPropertyRowMapper.newInstance(SurveyFormQuestion.class);
+    	List<SurveyFormQuestion> questionList = getFormStructure(surveyFormReq.getFormId(), surveyFormReq.getAppId());
+        commonResponse.setCode("200");
+        commonResponse.setMsg("success");
+        commonResponse.setReturnObject(questionList);
     	
         
+    	return ResponseEntity.ok(commonResponse);
+    }
+    
+    public ResponseEntity<CommonResponse> submitForm(final SurveyFormSubmitReq surveyFormSubmitReq) { 
+    	CommonResponse commonResponse = new CommonResponse();
+    	String checkSql = "select count(1) from survey_form_answer where form_id=? and staff_id=?";
+    	int num = jdbcTemplate.queryForObject(checkSql, new Object[] {surveyFormSubmitReq.getFormId(), surveyFormSubmitReq.getStaffId()}, Integer.class);
+    	if (num>0) { 
+    		ErrorHandleHelper.getInstance().throwBadRequestRestException("Buss_ERROR", "Please do not dupicate submit", surveyFormSubmitReq.getFormId() + "," + surveyFormSubmitReq.getStaffId());
+        	return ResponseEntity.ok(commonResponse);
+    	}
+    	StringBuilder fieldSB = new StringBuilder("");
+    	StringBuilder valueSB = new StringBuilder("");
+    	Object[] valueObj = new Object[surveyFormSubmitReq.getAnswers().size()+2];
+    	valueObj[0] = surveyFormSubmitReq.getFormId();
+    	valueObj[1] = surveyFormSubmitReq.getStaffId();
+    	int v = 1;
+    	for (String key:surveyFormSubmitReq.getAnswers().keySet()) { 
+    		fieldSB.append("answer"+key+",");
+    		valueSB.append("?,");
+    		valueObj[++v] = surveyFormSubmitReq.getAnswers().get(key);
+    	}
+    	String fieldStr = fieldSB.toString();
+    	String valueStr = valueSB.toString();
+    	fieldStr = fieldStr.substring(0, fieldStr.length()-1);
+    	valueStr = valueStr.substring(0, valueStr.length()-1);
+    	String sql = "insert into survey_form_answer (form_id, staff_id, last_update_datetime, "+fieldStr+") values (?,?,now(),"+valueStr+")";
+    	System.out.println(">> sql:"+sql);
+    	jdbcTemplate.update(sql, valueObj);
+    	commonResponse.setCode("200");
+        commonResponse.setMsg("success");
     	return ResponseEntity.ok(commonResponse);
     }
     

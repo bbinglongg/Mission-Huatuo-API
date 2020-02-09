@@ -171,9 +171,13 @@ public class HuatuoResource {
     @PostMapping("/survey/form")
     @ApiOperation(value = "survey form", notes = "get survey form structure", httpMethod = "POST")
     public ResponseEntity<CommonResponse> getSurveryForm(@RequestBody final SurveyFormReq surveyFormReq) throws WxErrorException {
-    	
         return surveyFormService.getForm(surveyFormReq);
-//    	return null;
+    }
+    
+    @PostMapping("/survey/form/submit")
+    @ApiOperation(value = "submit survey form", notes = "submit survey form", httpMethod = "POST")
+    public ResponseEntity<CommonResponse> submitSurveryForm(@RequestBody final SurveyFormSubmitReq surveyFormSubmitReq) throws WxErrorException {
+        return surveyFormService.submitForm(surveyFormSubmitReq);
     }
 
     @PostMapping("/surveyform/lists")
