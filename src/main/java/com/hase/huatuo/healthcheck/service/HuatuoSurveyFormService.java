@@ -91,10 +91,11 @@ public class HuatuoSurveyFormService {
         SurveyFormDetailResponse surveyFormDetailResponse = new SurveyFormDetailResponse();
         surveyFormDetailResponse.setAnswers(answersMap);
         //questions
-        surveyFormDetailResponse.setQuestions("");
+        surveyFormDetailResponse.setQuestions(surveyFormService.getFormStructure(Long.valueOf(surveyFormDetailRequestBody.getFormId()), surveyFormDetailRequestBody.getAppId()));
         commonResponse.setCode("200");
         commonResponse.setMsg("success");
         commonResponse.setReturnObject(surveyFormDetailResponse);
         return ResponseEntity.ok(commonResponse);
     }
+    
 }

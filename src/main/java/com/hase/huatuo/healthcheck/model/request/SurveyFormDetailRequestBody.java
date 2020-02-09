@@ -10,4 +10,6 @@ public class SurveyFormDetailRequestBody {
     private String staffId;
     @NotBlank
     private String formId;
+    @NotBlank
+    private String appId;
 }
