@@ -9,11 +9,12 @@ import lombok.Setter;
 @Setter
 public class SurveyFormQuestion {
 
-	private String question_zh;
-	private String question_en;
-	private String index;
-	private String mandartory;
-	private String type;
+	private Long question_id;
+	private String question_title_cn;
+	private String question_title_en;
+	private String question_no;
+	private String question_type;
+	private String rule;
 	private List<SurveyFormAnswer> answers;
 	
 }

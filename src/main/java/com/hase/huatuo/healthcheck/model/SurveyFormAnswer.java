@@ -1,7 +1,5 @@
 package com.hase.huatuo.healthcheck.model;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +7,12 @@ import lombok.Setter;
 @Setter
 public class SurveyFormAnswer {
 	
-	private String index;
-	private String answer_zh;
-	private String answer_en;
-	private String value;
+	private String item_id;
+	private String question_id;
+	private String item_no;
+	private String item_text_cn;
+	private String item_text_en;
+	private String need_sub_item;
+	private String sub_item_rule;
 	
 }

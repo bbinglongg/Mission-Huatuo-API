@@ -2,6 +2,7 @@ package com.hase.huatuo.healthcheck.model.request;
 
 public class SurveyFormReq {
 	
+	private long formId;
 	private String appId;
 	private String staffId;
 	public String getAppId() {
@@ -15,6 +16,12 @@ public class SurveyFormReq {
 	}
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
+	}
+	public long getFormId() {
+		return formId;
+	}
+	public void setFormId(long formId) {
+		this.formId = formId;
 	}
 	
 }
