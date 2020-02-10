@@ -1,12 +1,9 @@
 package com.hase.huatuo.healthcheck.rest;
 
-import com.hase.huatuo.healthcheck.dao.DonationRepository;
-import com.hase.huatuo.healthcheck.dao.entity.Donation;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.request.*;
 import com.hase.huatuo.healthcheck.model.response.AreaReport;
-import com.hase.huatuo.healthcheck.model.response.AreaReportForHacn;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import com.hase.huatuo.healthcheck.model.response.DatadictGetResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
@@ -17,7 +14,6 @@ import com.hase.huatuo.healthcheck.service.*;
 
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,20 +44,11 @@ public class HuatuoResource {
     private HuatuoWechatService huatuoWechatService;
 
     @Autowired
-    private StaffNeedsCollectionsOfHacnService needsCollectionsOfHacnService;
-
-    @Autowired
-    private HealthReportOfHacnService healthReportOfHacnService;
-    
-    @Autowired
     private NewsInfoListService newsInfoListService;
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
 
-    @Autowired
-    private DonationRepository donationRepository;
-    
     @Autowired
     private SurveyFormService surveyFormService;
 
@@ -79,11 +66,6 @@ public class HuatuoResource {
     @GetMapping("/health")
     public ResponseEntity<List<AreaReport>> requestHealth(@RequestHeader("X-IS-DUMMY") String isDummy) {
     	return healthReportService.enquiry(isDummy);
-    }
-
-    @GetMapping("/hacn/health")
-    public ResponseEntity<AreaReportForHacn> requestHealthOfHacn() {
-        return healthReportOfHacnService.enquiry();
     }
     
     @PostMapping("/vpn")
@@ -136,24 +118,6 @@ public class HuatuoResource {
     @ApiOperation(value = "wechat-login", notes = "wechat login", httpMethod = "POST")
     public ResponseEntity<WechatLoginResponse> login(@RequestBody final WechatLoginRequest wechatLoginRequest) throws WxErrorException {
         return ResponseEntity.ok(huatuoWechatService.login(wechatLoginRequest.getAppId(), wechatLoginRequest.getCode()));
-    }
-
-    @PostMapping("/hacn/needs-collection")
-    @ApiOperation(value = "hacn-needs-collection", notes = "hacn staff needs collection", httpMethod = "POST")
-    public ResponseEntity needsCollectionOfHacnStaff(@Valid @RequestBody  StaffOfHacnNeedsPostBody staffOfHacnNeedsPostBody){
-        return needsCollectionsOfHacnService.saveStaffNeedsCollection(staffOfHacnNeedsPostBody);
-    }
-
-    @PostMapping("/hacn/donation")
-    @ApiOperation(value = "hacn-donation", notes = "hacn staff needs donation", httpMethod = "POST")
-    public ResponseEntity hacnStaffDonation(@Valid @RequestBody DonationRequest donationRequest){
-        Donation donation = new Donation();
-        BeanUtils.copyProperties(donationRequest,donation);
-        donationRepository.save(donation);
-        CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setCode("200");
-        commonResponse.setMsg("Success");
-        return  ResponseEntity.ok(commonResponse);
     }
 
     @PostMapping("/news-info/lists")
