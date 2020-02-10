@@ -55,6 +55,8 @@ public class TripSurveyInfo {
     private String contactHistory;
     @Column(name = "body_history")
     private String bodyHistory;
+    @Column(name = "other_body_history")
+    private String otherBodyHistory;
     @Column(name = "report_date")
     private String reportDate;
 
