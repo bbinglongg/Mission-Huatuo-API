@@ -54,7 +54,7 @@ public class HuatuoSurveyFormService {
                 item.setFormId(""+cells[0]);
                 item.setFormNameCn(""+cells[1]);
                 item.setFormNameEn(""+cells[2]);
-                item.setLastUpdateDateTime(""+cells[3]);
+                item.setLastUpdateDateTime(formatterDateTime(""+cells[3]));
                 item.setStatus(""+cells[4]);
                 if("0".equals(""+cells[4])){
                     unCompleteList.add(item);
@@ -97,5 +97,11 @@ public class HuatuoSurveyFormService {
         commonResponse.setReturnObject(surveyFormDetailResponse);
         return ResponseEntity.ok(commonResponse);
     }
-    
+
+    private String formatterDateTime(String dateTimeStr){
+        if(null==dateTimeStr && dateTimeStr.length()<16){
+            return dateTimeStr;
+        }
+        return dateTimeStr.substring(0,16);
+    }
 }
