@@ -39,8 +39,10 @@ public class HealthInfoHacn implements Serializable {
 	private String healthStatus;
 	@Column(name="is_isolation")
 	private String isIsolation;
-	@Column(name="isolation_type")
-	private String isolationType;
+	@Column(name="go_workplace")
+	private String goWorkplace;
+	@Column(name="health_description")
+	private String healthDescription;
 	@Column(name="isolation_start_date")
 	private String isolationStartDate;
 	@Column(name="isolation_end_date")
@@ -122,12 +124,6 @@ public class HealthInfoHacn implements Serializable {
 	public void setIsIsolation(String isIsolation) {
 		this.isIsolation = isIsolation;
 	}
-	public String getIsolationType() {
-		return isolationType;
-	}
-	public void setIsolationType(String isolationType) {
-		this.isolationType = isolationType;
-	}
 	public String getIsolationStartDate() {
 		return isolationStartDate;
 	}
@@ -152,7 +148,20 @@ public class HealthInfoHacn implements Serializable {
 	public void setIsStatistic(String isStatistic) {
 		this.isStatistic = isStatistic;
 	}
-	
 
-	
+	public String getGoWorkplace() {
+		return goWorkplace;
+	}
+
+	public void setGoWorkplace(String goWorkplace) {
+		this.goWorkplace = goWorkplace;
+	}
+
+	public String getHealthDescription() {
+		return healthDescription;
+	}
+
+	public void setHealthDescription(String healthDescription) {
+		this.healthDescription = healthDescription;
+	}
 }

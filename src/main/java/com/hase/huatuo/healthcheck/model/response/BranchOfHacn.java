@@ -17,17 +17,18 @@ public class BranchOfHacn {
         this.suspect = suspect;
     }
 
-    public String getFever() {
-        return fever;
+    public String getDeath() {
+        return death;
     }
 
-    public void setFever(String fever) {
-        this.fever = fever;
+    public void setDeath(String death) {
+        this.death = death;
     }
+
     private String area;
     private String confirmed;
     private String suspect;
-    private String fever;
+    private String death;
 
     public String getArea() {
         return area;
