@@ -184,6 +184,10 @@ public class HuatuoHealthHacnService {
     		ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "health status is null", null);
     	}
 
+		if(body.getGoWorkplace() == null ) {
+			ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "go workplace is null", null);
+		}
+
 	}
 
 	public ResponseEntity getHealthDetail(HealthDetailReqBody healthDetailReqBody) {
