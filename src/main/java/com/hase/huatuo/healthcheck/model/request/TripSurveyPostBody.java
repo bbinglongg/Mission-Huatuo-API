@@ -1,10 +1,6 @@
 package com.hase.huatuo.healthcheck.model.request;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -30,4 +26,5 @@ public class TripSurveyPostBody {
     private String transitCityOfHuBei;
     private String contactHistory;
     private String bodyHistory;
+    private String otherBodyHistory;
 }
