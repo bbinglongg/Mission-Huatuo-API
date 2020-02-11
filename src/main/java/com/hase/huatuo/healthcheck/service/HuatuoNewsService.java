@@ -3,6 +3,7 @@ package com.hase.huatuo.healthcheck.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hase.huatuo.healthcheck.utils.AppConfigUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class HuatuoNewsService {
 
     public ResponseEntity<CommonResponse> getImportantNewsList(final NewsNotReadRequest newsNotReadRequest){
         if(StringUtils.isEmpty(newsNotReadRequest.getAppId())){
-            newsNotReadRequest.setAppId("wx9812117be87d24d2");
+            newsNotReadRequest.setAppId(AppConfigUtils.getAppIdFromProperties("haseIT"));
         }
         CommonResponse commonResponse = new CommonResponse();
         List<ImportantNewsResponse>  importantNewsResponseList = new ArrayList<>();

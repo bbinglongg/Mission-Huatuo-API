@@ -2,6 +2,7 @@ package com.hase.huatuo.healthcheck.rest;
 
 import javax.validation.Valid;
 
+import com.hase.huatuo.healthcheck.utils.AppConfigUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class NewsInfoResource {
 	@PostMapping(path = "/news/detail")
 	public ResponseEntity<String> upDateNewsInfo(@RequestBody @Valid NewsDetailRequest detail) {
 		if(StringUtils.isEmpty(detail.getAppId())){
-			detail.setAppId("wx9812117be87d24d2");
+			detail.setAppId(AppConfigUtils.getAppIdFromProperties("haseIT"));
 		}
 		final String newsId = detail.getNewsId();
 		final String openId = detail.getOpenId();
