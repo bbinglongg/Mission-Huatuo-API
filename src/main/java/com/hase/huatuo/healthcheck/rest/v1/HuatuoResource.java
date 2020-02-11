@@ -1,6 +1,7 @@
-package com.hase.huatuo.healthcheck.rest;
+package com.hase.huatuo.healthcheck.rest.v1;
 
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
+import com.hase.huatuo.healthcheck.model.NewsInfo;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.request.*;
 import com.hase.huatuo.healthcheck.model.response.AreaReport;
@@ -12,8 +13,10 @@ import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
 import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
 import com.hase.huatuo.healthcheck.service.*;
 
+import com.hase.huatuo.healthcheck.utils.AppConfigUtils;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +27,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping({"/huatuo/api","/huatuo/api/v1","/api","/api/v1"})
+@RequestMapping({"/api","/api/v1"})
 public class HuatuoResource {
 
 
@@ -130,6 +133,11 @@ public class HuatuoResource {
     @ApiOperation(value = "important-news", notes = "important news and unread number", httpMethod = "POST")
     public ResponseEntity<CommonResponse> getImportantNewsList(@RequestBody final NewsNotReadRequest newsNotReadReq) throws WxErrorException {
         return huatuoNewsService.getImportantNewsList(newsNotReadReq);
+    }
+
+    @PostMapping(path = "/news/detail")
+    public ResponseEntity<NewsInfo> getNewsDetail(@RequestBody @Valid NewsDetailRequest newsDetailRequest) {
+        return ResponseEntity.ok(huatuoNewsService.getNewsDetail(newsDetailRequest));
     }
     
     @PostMapping("/survey/form")

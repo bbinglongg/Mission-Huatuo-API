@@ -1,4 +1,4 @@
-package com.hase.huatuo.healthcheck.rest;
+package com.hase.huatuo.healthcheck.rest.v1;
 
 import java.text.ParseException;
 
