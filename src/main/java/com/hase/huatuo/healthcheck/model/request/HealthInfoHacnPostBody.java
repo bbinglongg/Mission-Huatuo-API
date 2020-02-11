@@ -18,7 +18,7 @@ public class HealthInfoHacnPostBody {
 	private String isIsolation;
 	private String healthDescription;
 	private String goWorkplace;
+	private String goWorkplaceDatetime;
 	private String isolationStartDate;
 	private String isolationEndDate;
-	
 }

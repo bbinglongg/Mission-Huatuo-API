@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import com.hase.huatuo.healthcheck.common.config.WxMaProperties;
+import com.hase.huatuo.healthcheck.model.request.MiniProgramRegisterRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.hase.huatuo.healthcheck.model.UserInfo;
 import com.hase.huatuo.healthcheck.model.request.RegistrationPostBody;
 import com.hase.huatuo.healthcheck.model.response.CommonResponse;
 import com.hase.huatuo.healthcheck.utils.SMSUtils;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class HuatuoRegistrationService {
@@ -74,7 +76,7 @@ public class HuatuoRegistrationService {
                 return ResponseEntity.ok(response);
             }
         }
-        List<UserInfo> registerRecords = userInfoRepository.searchRegisterRecord(registrationPostBody.getAppId(), registrationPostBody.getStaffId());
+        List<UserInfo> registerRecords = userInfoRepository.retrieveUserInfoByAppIdStaffId(registrationPostBody.getAppId(), registrationPostBody.getStaffId());
         if (registerRecords.size() != 0) {
             System.out.println("The staff ID entered is already registered, id= " + registrationPostBody.getAppId());
             response.setCode("-1");
@@ -186,5 +188,21 @@ public class HuatuoRegistrationService {
             return true;
         }
         return false;
+    }
+
+    public UserInfo register(MiniProgramRegisterRequest miniProgramRegisterRequest) {
+        UserInfo userInfo = null;
+        List<UserInfo> userInfos = userInfoRepository.retrieveUserInfoByAppIdStaffId(miniProgramRegisterRequest.getAppId(), miniProgramRegisterRequest.getStaffId());
+        if (!CollectionUtils.isEmpty(userInfos)) {
+            System.out.println("The staff ID entered is already registered in Mini-program: appId= " + miniProgramRegisterRequest.getAppId());
+            ErrorHandleHelper.getInstance().throwBadRequestRestException("-1", "The staff ID that you entered is already registered", miniProgramRegisterRequest.getStaffId());
+        } else {
+            userInfo = new UserInfo();
+            userInfo.setAppId(miniProgramRegisterRequest.getAppId());
+            userInfo.setOpenId(miniProgramRegisterRequest.getOpenId());
+            userInfo.setStaffId(miniProgramRegisterRequest.getStaffId());
+            userInfo = userInfoRepository.saveAndFlush(userInfo);
+        }
+        return userInfo;
     }
 }
