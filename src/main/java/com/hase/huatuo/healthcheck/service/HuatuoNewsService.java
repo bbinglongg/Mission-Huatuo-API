@@ -3,6 +3,8 @@ package com.hase.huatuo.healthcheck.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hase.huatuo.healthcheck.model.request.NewsDetailRequest;
+import com.hase.huatuo.healthcheck.utils.AppConfigUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,10 @@ import com.hase.huatuo.healthcheck.model.response.NewsImportantResponse;
 @Service
 public class HuatuoNewsService {
 
+    public static final String NEWS_INFO_READ_RECORD_SQL = "select count(1) from news_info_read_record where staff_id=? and news_id=? and app_id=?";
+
+    public static final String HEALTH_UPDATE_SQL = "insert into news_info_read_record values (?, ?, ?)";
+
     @Autowired
     private NewsInfoRepository newsInfoRepository;
     
@@ -30,7 +36,7 @@ public class HuatuoNewsService {
 
     public ResponseEntity<CommonResponse> getImportantNewsList(final NewsNotReadRequest newsNotReadRequest){
         if(StringUtils.isEmpty(newsNotReadRequest.getAppId())){
-            newsNotReadRequest.setAppId("wx9812117be87d24d2");
+            newsNotReadRequest.setAppId(AppConfigUtils.getAppIdFromProperties("haseIT"));
         }
         CommonResponse commonResponse = new CommonResponse();
         List<ImportantNewsResponse>  importantNewsResponseList = new ArrayList<>();
@@ -61,5 +67,24 @@ public class HuatuoNewsService {
         int num = jdbcTemplate.queryForObject(HEALTH_STATISTIC_SQL, new Object[]{newsNotReadRequest.getAppId(),newsNotReadRequest.getOpenId(),newsNotReadRequest.getAppId()}, Integer.class);
 
         return num;
+    }
+
+    public NewsInfo getNewsDetail(NewsDetailRequest newsDetailRequest) {
+        if(StringUtils.isEmpty(newsDetailRequest.getAppId())){
+            newsDetailRequest.setAppId(AppConfigUtils.getAppIdFromProperties("haseIT"));
+        }
+        final String newsId = newsDetailRequest.getNewsId();
+        final String appId = newsDetailRequest.getAppId();
+
+        int num = jdbcTemplate.queryForObject(NEWS_INFO_READ_RECORD_SQL,
+                new Object[] { newsDetailRequest.getStaffId(), newsDetailRequest.getNewsId(),appId }, Integer.class);
+
+        if (num < 1) {
+            jdbcTemplate.update(HEALTH_UPDATE_SQL,
+                    new Object[] { appId,newsDetailRequest.getStaffId(), newsDetailRequest.getNewsId() });
+        }
+
+        NewsInfo info = newsInfoRepository.getNewsInfoByIdEquals(Long.valueOf(newsId));
+        return info;
     }
 }

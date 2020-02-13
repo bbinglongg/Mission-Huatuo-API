@@ -24,7 +24,7 @@ public class HuatuoWechatService {
 		WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
 		UserInfo userInfo = null;
 		String openId = session.getOpenid();
-		List<UserInfo> userInfos = userInfoRepository.searchOpenIdRegisterRecord(appId, openId);
+		List<UserInfo> userInfos = userInfoRepository.retrieveUserInfoByAppIdOpenId(appId, openId);
 		if (!CollectionUtils.isEmpty(userInfos)) {
 			userInfo = userInfos.get(0);
 		}

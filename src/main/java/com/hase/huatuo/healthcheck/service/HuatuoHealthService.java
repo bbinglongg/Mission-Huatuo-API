@@ -26,8 +26,10 @@ import com.hase.huatuo.healthcheck.model.response.HealthPostResponse;
 import com.hase.huatuo.healthcheck.model.response.HealthRequestResponse;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class HuatuoHealthService {
@@ -43,36 +45,84 @@ public class HuatuoHealthService {
 
 	@PersistenceContext
     private EntityManager entityManager;
-	
+
 	public HealthPostResponse setPersonHealth(HealthPostBody healthPostBody) {
 		HealthPostResponse response = new HealthPostResponse();
-		try {
-//			deleteHealthInfo(healthPostBody);
-			deleteHealthInfoHql(healthPostBody);
-		} catch (Exception e) {
-			e.printStackTrace();
+        List<HealthInfo> healthInfos = recordsRepository.searchSavedRecordByStaffId(healthPostBody.getStaffId());
+		//若帮别人填，保留高严重性的
+		if(healthPostBody.getStaffId() != healthPostBody.getReporter()){
+            if(healthInfos.size() > 0 ){
+                int savedRecordStatus = Integer.valueOf(healthInfos.get(0).getHealthStatus());
+                int newReportStatus = Integer.valueOf(healthPostBody.getHealthStatus());
+                if(savedRecordStatus < newReportStatus){ //之前保存的更严重=>不用保存当前记录
+                    response.setErrorCode("000");
+                    return response;
+                }
+            }
 		}
-		addHealthInfo(healthPostBody);
+		//自己报告的或帮别人上报更严重的记录 一律以新提交的为准，删除旧记录保存新记录
+        updateRecord(healthInfos,healthPostBody);
+//		try {
+//			deleteHealthInfoHql(healthPostBody);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		addHealthInfo(healthPostBody);
 		response.setErrorCode("000");
 		return response;
 	}
+    public void updateRecord(List<HealthInfo> savedRecords,HealthPostBody healthPostBody){
+        Set<String> savedWorkplaces = new HashSet<>();
+        if(savedRecords.size()>0){
+            savedRecords.stream().forEach(one->{
+                savedWorkplaces.add(one.getId().getWorkplace());
+            });
+        }
+        String workplace = healthPostBody.getWorkplace();
+        String[] submitedWorkplaceArray = workplace.split(",");
+        HealthInfo pi = new HealthInfo();
+        pi.setId(new healthPK());
+        pi.setCity(healthPostBody.getCity());
+        pi.setDepartment(healthPostBody.getDepartment());
+        pi.setHealthStatus(healthPostBody.getHealthStatus());
+        pi.setMobileNum(healthPostBody.getMobileNum());
+        pi.setOpenId(healthPostBody.getOpenId());
+        pi.setReporter(healthPostBody.getReporter());
+        pi.getId().setStaffID(healthPostBody.getStaffId());
+        pi.setOther(healthPostBody.getOther());
+        for (int i = 0; i < submitedWorkplaceArray.length; i++) {
+            pi.getId().setWorkplace(submitedWorkplaceArray[i]);
+            recordsRepository.save(pi);
+            if(savedWorkplaces.contains(submitedWorkplaceArray[i])){
+                savedWorkplaces.remove(submitedWorkplaceArray[i]);
+            }
+            String healthStatus = healthPostBody.getHealthStatus();
+            if ("1".equalsIgnoreCase(healthStatus) || "2".equalsIgnoreCase(healthStatus)) {
+                caseNotifyManger(submitedWorkplaceArray[i], healthPostBody.getHealthStatus());
+            }
+        }
+        if(savedWorkplaces.size() > 0){
+            for(String place : savedWorkplaces){
+                pi.getId().setWorkplace(place);
+                recordsRepository.delete(pi);
+            }
+        }
+        recordsRepository.flush();
+	}
+
 
 	public void deleteHealthInfoHql(HealthPostBody healthPostBody) {
+//	    recordsRepository.deleteHealthInfoHql(healthPostBody.getStaffId());
+//	    recordsRepository.flush();
 		Transaction tx = null;
 		Session session = null;
-//		SessionFactory sessionFactory = null;
-		
-		
 		HibernateEntityManager hEntityManager = (HibernateEntityManager)entityManager;
         session = hEntityManager.getSession();
-
-
 		try {
 			tx = session.getTransaction();
 			session.beginTransaction();
 			Query query = session.createQuery("delete HealthInfo s where s.id.staffID=?0");
 			query.setParameter(0, healthPostBody.getStaffId());
-//			query.
 			query.executeUpdate();
 			tx.commit();
 		} catch (HibernateException e) {
@@ -101,7 +151,6 @@ public class HuatuoHealthService {
 		pi.setReporter(healthPostBody.getReporter());
 		pi.getId().setStaffID(healthPostBody.getStaffId());
 		pi.setOther(healthPostBody.getOther());
-//		pi.setWorkplace(workplace);
 		for (int i = 0; i < list.length; i++) {
 			pi.getId().setWorkplace(list[i]);
 			recordsRepository.save(pi);

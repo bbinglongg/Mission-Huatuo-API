@@ -47,7 +47,7 @@ public class HuatuoTripSurveyService {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "request body is null", null);
         }
         List<String> ignoreList = new ArrayList<String>(Arrays.asList(new String[]{"familyContact","familyCondition",
-                "transitNo","transitDate","transitCity","transitHuBei","transitCityOfHuBei"}));
+                "transitNo","transitDate","transitCity","transitHuBei","transitCityOfHuBei","otherBodyHistory"}));
         Class clazz = (Class)tripSurveyPostBody.getClass();
         Field fields[] = clazz.getDeclaredFields();
         for(Field field : fields){
