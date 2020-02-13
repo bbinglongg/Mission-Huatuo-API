@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.hase.huatuo.healthcheck.dao.SMSInfoRepository;
 import com.hase.huatuo.healthcheck.dao.StaffListRepository;
 import com.hase.huatuo.healthcheck.dao.UserInfoRepository;
-import com.hase.huatuo.healthcheck.dao.entity.StaffListEntity;
+import com.hase.huatuo.healthcheck.dao.entity.Staff;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
 import com.hase.huatuo.healthcheck.model.SMSInfo;
 import com.hase.huatuo.healthcheck.model.UserInfo;
@@ -153,7 +153,7 @@ public class HuatuoRegistrationService {
                 ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
             }
         } else {
-            if (!ifStaffInWhiteList(registrationPostBody.getStaffId())) {
+            if (!ifStaffInWhiteList(registrationPostBody.getStaffId(), registrationPostBody.getAppId())) {
                 ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", null);
             }
         }
@@ -166,23 +166,15 @@ public class HuatuoRegistrationService {
 
     public boolean ifStaffMobileNumInWhiteList(String staffId, String mobileNum) {
         try {
-            StaffListEntity staffList = staffListRepository.findById(staffId).orElse(null);
-            if (staffList != null) {
-                if (staffList.getMobileNum() != null && staffList.getMobileNum().length() != 0) {
-                    return staffList.getMobileNum().equals(mobileNum);
+            Staff staff = staffListRepository.findById(staffId).orElse(null);
+            if (staff != null) {
+                if (staff.getMobileNum() != null && staff.getMobileNum().length() != 0) {
+                    return staff.getMobileNum().equals(mobileNum);
                 }
                 return true;
             }
         } catch (Exception e) {
 
-        }
-        return false;
-    }
-
-    public boolean ifStaffInWhiteList(String staffId) {
-        StaffListEntity staffList = staffListRepository.findById(staffId).orElse(null);
-        if (staffList != null) {
-            return true;
         }
         return false;
     }
@@ -205,8 +197,13 @@ public class HuatuoRegistrationService {
     }
 
     private void checkRegisterLogic(MiniProgramRegisterRequest miniProgramRegisterRequest) {
-        if (!ifStaffInWhiteList(miniProgramRegisterRequest.getStaffId())) {
+        if (!ifStaffInWhiteList(miniProgramRegisterRequest.getStaffId(), miniProgramRegisterRequest.getAppId())) {
             ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", miniProgramRegisterRequest.getStaffId());
         }
+    }
+
+    private boolean ifStaffInWhiteList(String staffId, String appId) {
+        Staff staff = staffListRepository.findByStaffIdAppId(staffId, appId);
+        return staff != null;
     }
 }

@@ -30,24 +30,9 @@ public class UserInfo implements Serializable {
     @Column(name="other")
     private String other;
 
+    @Data
     public static class UserInfoKey implements Serializable {
         private String staffId;
         private String appId;
-
-        public String getStaffId() {
-            return staffId;
-        }
-
-        public void setStaffId(String staffId) {
-            this.staffId = staffId;
-        }
-
-        public String getAppId() {
-            return appId;
-        }
-
-        public void setAppId(String appId) {
-            this.appId = appId;
-        }
     }
 }
