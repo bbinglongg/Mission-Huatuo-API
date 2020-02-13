@@ -15,6 +15,6 @@ public class SurveyFormQuestion {
 	private String question_no;
 	private String question_type;
 	private String rule;
-	private List<SurveyFormAnswer> answers;
+	private List<SurveyFormQuestionItem> answers;
 	
 }

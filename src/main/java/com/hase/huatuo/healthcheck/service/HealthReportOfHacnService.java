@@ -41,7 +41,7 @@ public class HealthReportOfHacnService {
         put("FS", 1);put("HuZ", 2);put("JM", 3);put("ZS", 4);
     }};
 
-    private static final String HEALTH_SUMMARY_BY_CITY = "SELECT c.city_short_name as cityShortName,h.health_status as healthStatus,AVG(c.onlyHasSubBranch) AS isSubBranch, SUM(IF(h.staff_id IS NULL, 0, 1)) AS total FROM cities c LEFT JOIN health_info_hacn h on c.city_short_name = h.city_short_name WHERE h.is_statistic= '1' OR h.is_statistic IS NULL GROUP BY c.city_short_name, h.health_status ORDER BY null";
+    private static final String HEALTH_SUMMARY_BY_CITY = "SELECT c.city_short_name as cityShortName,h.health_status as healthStatus,AVG(c.only_has_sub_branch) AS isSubBranch, SUM(IF(h.staff_id IS NULL, 0, 1)) AS total FROM cities_hacn c LEFT JOIN health_info_hacn h on c.city_short_name = h.city_short_name WHERE h.is_statistic= '1' OR h.is_statistic IS NULL GROUP BY c.city_short_name, h.health_status ORDER BY null";
 
     private static final String HEALTH_SUMMARY_BY_ISOLATION_TYPE = "select count(h.health_status) from health_info_hacn h where (h.is_statistic='1' or h.is_statistic IS NULL) and h.health_status=?";
 

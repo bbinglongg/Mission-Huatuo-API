@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @author David
  * @date
@@ -24,7 +26,7 @@ public class RegisterResource {
     @PostMapping("/register/mini-program")
     @ApiOperation(value = "mini program register", notes = "mini program register", httpMethod = "POST")
     @ResponseStatus(value = HttpStatus.OK)
-    public UserInfo registration(@RequestBody final MiniProgramRegisterRequest miniProgramRegisterRequest) {
+    public UserInfo registration(@RequestBody @Valid final MiniProgramRegisterRequest miniProgramRegisterRequest) {
         return huatuoRegistrationService.register(miniProgramRegisterRequest);
     }
 }

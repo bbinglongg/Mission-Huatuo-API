@@ -13,10 +13,8 @@ import com.hase.huatuo.healthcheck.model.response.VpnReportResponse;
 import com.hase.huatuo.healthcheck.model.response.WechatLoginResponse;
 import com.hase.huatuo.healthcheck.service.*;
 
-import com.hase.huatuo.healthcheck.utils.AppConfigUtils;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,13 +49,6 @@ public class HuatuoResource {
     
     @Autowired
     private HuatuoNewsService huatuoNewsService;
-
-    @Autowired
-    private SurveyFormService surveyFormService;
-
-    @Autowired
-    private HuatuoSurveyFormService huatuoSurveyFormService;
-
 
     @PostMapping("/health")
     public HealthPostResponse updateHealth(@RequestBody final HealthPostBody healthPostBody) {
@@ -138,29 +129,5 @@ public class HuatuoResource {
     @PostMapping(path = "/news/detail")
     public ResponseEntity<NewsInfo> getNewsDetail(@RequestBody @Valid NewsDetailRequest newsDetailRequest) {
         return ResponseEntity.ok(huatuoNewsService.getNewsDetail(newsDetailRequest));
-    }
-    
-    @PostMapping("/survey/form")
-    @ApiOperation(value = "survey form", notes = "get survey form structure", httpMethod = "POST")
-    public ResponseEntity<CommonResponse> getSurveryForm(@RequestBody final SurveyFormReq surveyFormReq) throws WxErrorException {
-        return surveyFormService.getForm(surveyFormReq);
-    }
-    
-    @PostMapping("/survey/form/submit")
-    @ApiOperation(value = "submit survey form", notes = "submit survey form", httpMethod = "POST")
-    public ResponseEntity<CommonResponse> submitSurveryForm(@RequestBody final SurveyFormSubmitReq surveyFormSubmitReq) throws WxErrorException {
-        return surveyFormService.submitForm(surveyFormSubmitReq);
-    }
-
-    @PostMapping("/surveyform/lists")
-    @ApiOperation(value = "surveyform_lists", notes = "surveyform lists", httpMethod = "POST")
-    public ResponseEntity<CommonResponse> getSurveyFormList(@RequestBody @Valid final SurveyFormListRequestBody surveyFormListRequestBody) throws WxErrorException {
-        return huatuoSurveyFormService.getSurveyFormList(surveyFormListRequestBody);
-    }
-
-    @PostMapping("/surveyform/detail")
-    @ApiOperation(value = "surveyform_detail", notes = "surveyform detail", httpMethod = "POST")
-    public ResponseEntity<CommonResponse> getSurveyFormDetail(@RequestBody @Valid final SurveyFormDetailRequestBody surveyFormDetailRequestBody) throws WxErrorException {
-        return huatuoSurveyFormService.getSurveyFormDetail(surveyFormDetailRequestBody);
     }
 }

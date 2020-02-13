@@ -1,4 +1,4 @@
-package com.hase.huatuo.healthcheck;
+package com.hase.huatuo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

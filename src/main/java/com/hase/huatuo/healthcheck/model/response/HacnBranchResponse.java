@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class SurveyFormListResponse {
+public class HacnBranchResponse {
     private List<SurveyFormInfo> unComplete;
     private List<SurveyFormInfo> complete;
 
-    public SurveyFormListResponse (List<SurveyFormInfo> unComplete, List<SurveyFormInfo> complete) {
+    public HacnBranchResponse(List<SurveyFormInfo> unComplete, List<SurveyFormInfo> complete) {
         this.unComplete = unComplete;
         this.complete = complete;
     }

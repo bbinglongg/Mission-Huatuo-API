@@ -48,11 +48,8 @@ public class HuatuoRegistrationService {
 
     public ResponseEntity<CommonResponse> register(RegistrationPostBody registrationPostBody) {
         CommonResponse response = new CommonResponse();
-        if ("1234".equals(registrationPostBody.getVerifyCode())
-                && "00000000".equals(registrationPostBody.getStaffId())
-                && "19999999999".equals(registrationPostBody.getMobileNum())) {
+        if ("00000000".equals(registrationPostBody.getStaffId())) {
             UserInfo userInfo = new UserInfo();
-            userInfo.setMobileNum(registrationPostBody.getMobileNum());
             userInfo.setAppId(registrationPostBody.getAppId());
             userInfo.setOpenId(registrationPostBody.getOpenId());
             userInfo.setStaffId(registrationPostBody.getStaffId());
@@ -191,6 +188,7 @@ public class HuatuoRegistrationService {
     }
 
     public UserInfo register(MiniProgramRegisterRequest miniProgramRegisterRequest) {
+        this.checkRegisterLogic(miniProgramRegisterRequest);
         UserInfo userInfo = null;
         List<UserInfo> userInfos = userInfoRepository.retrieveUserInfoByAppIdStaffId(miniProgramRegisterRequest.getAppId(), miniProgramRegisterRequest.getStaffId());
         if (!CollectionUtils.isEmpty(userInfos)) {
@@ -204,5 +202,11 @@ public class HuatuoRegistrationService {
             userInfo = userInfoRepository.saveAndFlush(userInfo);
         }
         return userInfo;
+    }
+
+    private void checkRegisterLogic(MiniProgramRegisterRequest miniProgramRegisterRequest) {
+        if (!ifStaffInWhiteList(miniProgramRegisterRequest.getStaffId())) {
+            ErrorHandleHelper.getInstance().throwBadRequestRestException("Bad Request", "Invalid input data", miniProgramRegisterRequest.getStaffId());
+        }
     }
 }
