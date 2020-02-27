@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.hase.huatuo.healthcheck.dao.SMSInfoRepository;
-import com.hase.huatuo.healthcheck.dao.StaffListRepository;
+import com.hase.huatuo.healthcheck.dao.StaffRepository;
 import com.hase.huatuo.healthcheck.dao.UserInfoRepository;
 import com.hase.huatuo.healthcheck.dao.entity.Staff;
 import com.hase.huatuo.healthcheck.helper.ErrorHandleHelper;
@@ -34,7 +34,7 @@ public class HuatuoRegistrationService {
     private SMSInfoRepository smsInfoRepository;
 
     @Autowired
-    private StaffListRepository staffListRepository;
+    private StaffRepository staffRepository;
 
     private String hacnAppId = null;
 
@@ -166,7 +166,7 @@ public class HuatuoRegistrationService {
 
     public boolean ifStaffMobileNumInWhiteList(String staffId, String mobileNum) {
         try {
-            Staff staff = staffListRepository.findById(staffId).orElse(null);
+            Staff staff = staffRepository.findById(staffId).orElse(null);
             if (staff != null) {
                 if (staff.getMobileNum() != null && staff.getMobileNum().length() != 0) {
                     return staff.getMobileNum().equals(mobileNum);
@@ -203,7 +203,7 @@ public class HuatuoRegistrationService {
     }
 
     private boolean ifStaffInWhiteList(String staffId, String appId) {
-        Staff staff = staffListRepository.findByStaffIdAppId(staffId, appId);
+        Staff staff = staffRepository.findByStaffIdAppId(staffId, appId);
         return staff != null;
     }
 }

@@ -5,7 +5,7 @@
 
     <groupId>com.hase.huatuo</groupId>
     <artifactId>hase-huatuo-api</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>hase-huatuo-api</name>
     <packaging>jar</packaging>
 
@@ -32,7 +32,7 @@
 
     <properties>
         <mybatis-spring-boot>1.2.0</mybatis-spring-boot>
-        <mysql-connector>5.1.39</mysql-connector>
+        <mysql-connector>8.0.19</mysql-connector>
     </properties>
 
     <dependencies>

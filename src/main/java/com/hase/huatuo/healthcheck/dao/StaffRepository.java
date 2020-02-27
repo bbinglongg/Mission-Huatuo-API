@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.hase.huatuo.healthcheck.dao.entity.Staff;
 
 @Repository
-public interface StaffListRepository extends JpaRepository<Staff,String> {
+public interface StaffRepository extends JpaRepository<Staff,String> {
 
-    @Query(value = "select sl from Staff sl where sl.staffId=?1 and sl.appId = ?2")
+    @Query(value = "select sl from com.hase.huatuo.healthcheck.dao.entity.Staff sl where sl.staffId=?1 and sl.appId = ?2")
     Staff findByStaffIdAppId(String staffId, String appId);
 }

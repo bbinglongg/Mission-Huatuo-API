@@ -17,7 +17,7 @@ wx:
         msgDataFormat: JSON
 ---
 app:
-  database: HUATUO-TEST
+  database: huatuo-test
 spring:
   profiles: test
   mail:
@@ -41,14 +41,15 @@ spring:
       register-verify: SMS_182840777
       alert-health-report: SMS_183200260
   datasource:
-    url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
-    username: root
-    password: rbwm@123
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://134.175.111.164:3306/${app.database}?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: huatuo-test
+    password: hase@1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQLDialect
 server:
   port: 9090
   tomcat:
@@ -58,7 +59,7 @@ server:
 
 ---
 app:
-  database: HUATUO
+  database: huatuo
 spring:
   profiles: prod
   mail:
@@ -82,13 +83,14 @@ spring:
       register-verify: SMS_182840777
       alert-health-report: SMS_183200260
   datasource:
-    url: jdbc:mysql://gz-cdb-en9qzhyj.sql.tencentcdb.com:60484/${app.database}?useUnicode=true&characterEncoding=utf8
-    username: root
-    password: rbwm@123
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://134.175.111.164:3306/${app.database}?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: huatuo
+    password: hase@1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQLDialect
 server:
   port: 8080
   tomcat:
