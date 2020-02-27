@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
-@Entity(name = "staff_list")
+@Entity
 @IdClass(Staff.StaffKey.class)
 @Data
 public class Staff implements Serializable {
